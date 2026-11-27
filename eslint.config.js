@@ -35,6 +35,29 @@ export default tseslint.config(
     },
   },
   {
+    // Main-thread UI code must never contain a PDF parser: parsing happens in the worker.
+    files: ['src/ui/**/*.ts'],
+    ignores: ['src/ui/worker.ts', 'src/ui/preview.ts'],
+    rules: {
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['pdfjs-dist', 'pdfjs-dist/*', '@cantoo/pdf-lib', 'pdf-lib'],
+              message: 'PDF parsing belongs in src/ui/worker.ts.',
+            },
+            {
+              group: ['../core/index.ts', '../core/analyze.ts', '../core/crop.ts'],
+              allowTypeImports: true,
+              message: 'Import only types from the core here; parsing runs in the worker.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['**/*.js'],
     ...tseslint.configs.disableTypeChecked,
   },
