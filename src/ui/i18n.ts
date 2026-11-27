@@ -14,6 +14,10 @@ const de = {
   'app.privacy':
     'Alles bleibt auf deinem Gerät: Die PDF wird nur in deinem Browser verarbeitet. Keine Uploads, kein Konto, kein Tracking.',
   'lang.switch': 'English',
+  'theme.label': 'Darstellung',
+  'theme.system': 'Automatisch',
+  'theme.light': 'Hell',
+  'theme.dark': 'Dunkel',
   'lang.switchLabel': 'Switch to English',
 
   'file.drop': 'PDF hierher ziehen oder klicken, um eine Datei auszuwählen',
@@ -33,7 +37,7 @@ const de = {
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
   'settings.remember': 'Einstellungen auf diesem Gerät merken',
   'settings.rememberHint':
-    'Gespeichert werden nur Etikettenformat, automatische Formatwahl und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
+    'Gespeichert werden nur Etikettenformat, automatische Formatwahl, Zoll-Option und Darstellung, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
   'settings.rememberFailed':
     'Dein Browser erlaubt das Speichern nicht (z. B. im privaten Modus). Die Einstellungen gelten nur für diesen Besuch.',
 
@@ -146,6 +150,10 @@ const en: Record<MessageKey, string> = {
   'app.privacy':
     'Everything stays on your device: the PDF is processed only in your browser. No uploads, no account, no tracking.',
   'lang.switch': 'Deutsch',
+  'theme.label': 'Appearance',
+  'theme.system': 'Automatic',
+  'theme.light': 'Light',
+  'theme.dark': 'Dark',
   'lang.switchLabel': 'Auf Deutsch umschalten',
 
   'file.drop': 'Drop a PDF here or click to choose a file',
@@ -165,7 +173,7 @@ const en: Record<MessageKey, string> = {
   'settings.allowShrink': 'Shrink anyway (not recommended)',
   'settings.remember': 'Remember settings on this device',
   'settings.rememberHint':
-    'Only the label size, the automatic size choice and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
+    'Only the label size, the automatic size choice, the customs option and the appearance are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
   'settings.rememberFailed':
     'Your browser does not allow storing settings (e.g. in private mode). They apply to this visit only.',
 

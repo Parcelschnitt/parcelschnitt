@@ -41,23 +41,25 @@ describe('remembered settings', () => {
     expect(storage.data.size).toBe(0);
   });
 
-  it('round-trips profile and customs option, and nothing else', () => {
+  it('round-trips the stored preferences, and nothing else', () => {
     const storage = memoryStorage();
     expect(
       saveSettings(storage, {
         profileId: 'dymo-99014',
         customsForms: 'separateA4',
         autoProfile: false,
+        theme: 'dark',
       }),
     ).toBe(true);
     expect(loadSettings(storage)).toEqual({
       profileId: 'dymo-99014',
       customsForms: 'separateA4',
       autoProfile: false,
+      theme: 'dark',
     });
     expect(
       Object.keys(JSON.parse(storage.data.get(SETTINGS_KEY) ?? '{}') as object).sort(),
-    ).toEqual(['autoProfile', 'customsForms', 'profileId']);
+    ).toEqual(['autoProfile', 'customsForms', 'profileId', 'theme']);
   });
 
   it('treats settings stored before the auto-format option as auto-format on', () => {
@@ -65,7 +67,11 @@ describe('remembered settings', () => {
       profileId: 'dymo-99014',
       customsForms: 'omit',
       autoProfile: true,
+      theme: 'system',
     });
+    expect(
+      parseSettings('{"profileId":"dymo-99014","customsForms":"omit","theme":"neon"}'),
+    ).toBeNull();
     expect(
       parseSettings('{"profileId":"dymo-99014","customsForms":"omit","autoProfile":"yes"}'),
     ).toBeNull();
@@ -73,7 +79,12 @@ describe('remembered settings', () => {
 
   it('forgets everything on request', () => {
     const storage = memoryStorage();
-    saveSettings(storage, { profileId: 'brother-62', customsForms: 'omit', autoProfile: true });
+    saveSettings(storage, {
+      profileId: 'brother-62',
+      customsForms: 'omit',
+      autoProfile: true,
+      theme: 'system',
+    });
     forgetSettings(storage);
     expect(storage.data.size).toBe(0);
     expect(loadSettings(storage)).toBeNull();
@@ -96,6 +107,7 @@ describe('remembered settings', () => {
         profileId: 'dymo-99014',
         customsForms: 'omit',
         autoProfile: true,
+        theme: 'system',
       }),
     ).toBe(false);
     expect(() => {
@@ -103,7 +115,12 @@ describe('remembered settings', () => {
     }).not.toThrow();
     expect(loadSettings(null)).toBeNull();
     expect(
-      saveSettings(null, { profileId: 'dymo-99014', customsForms: 'omit', autoProfile: true }),
+      saveSettings(null, {
+        profileId: 'dymo-99014',
+        customsForms: 'omit',
+        autoProfile: true,
+        theme: 'system',
+      }),
     ).toBe(false);
   });
 });

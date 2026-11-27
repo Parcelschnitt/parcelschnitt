@@ -19,7 +19,15 @@
           <p class="tagline" data-i18n="app.tagline"></p>
         </div>
       </div>
-      <button type="button" id="lang-toggle" class="link-button"></button>
+      <div class="header-controls">
+        <label for="theme-select" data-i18n="theme.label"></label>
+        <select id="theme-select">
+          <option value="system" data-i18n="theme.system"></option>
+          <option value="light" data-i18n="theme.light"></option>
+          <option value="dark" data-i18n="theme.dark"></option>
+        </select>
+        <button type="button" id="lang-toggle" class="link-button"></button>
+      </div>
     </header>
 
     <p class="wip" role="note" data-i18n="app.wip"></p>

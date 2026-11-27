@@ -81,9 +81,12 @@ docs/            user guide, "report a new layout"
 - The production CSP is injected as a meta tag at build time (`vite.config.ts`); CI checks it.
 - Format choice: "choose the size to match the label" (on by default) uses the layout's
   `recommendedProfileId`; a manual change applies to the current file; off = last chosen.
+- Appearance: automatic (follows the system), light or dark via `data-theme` on <html>;
+  `styles.css` keeps the dark variables in two identical blocks (explicit and media query).
+  The light theme keeps secondary text well above WCAG AA contrast.
 - Settings persistence is opt-in ("remember settings", off by default): only profile,
-  auto-format choice and customs option in localStorage, validated on read; unticking deletes
-  them. The shrink
+  auto-format choice, customs option and appearance in localStorage, validated on read;
+  unticking deletes them. The legal pages read the stored appearance (`legalPage.ts`). The shrink
   permission is never stored. All text is set via `textContent`.
 
 ## Hidden content in outputs (decision 2026-11-27)

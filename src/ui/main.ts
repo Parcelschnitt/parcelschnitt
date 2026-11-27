@@ -19,6 +19,7 @@ import {
 } from './protocol.ts';
 import { defaultSelection, fromMm, toMm, turn, type Box } from './selection.ts';
 import { SelectionEditor } from './selectionEditor.ts';
+import { applyTheme, isTheme, type Theme } from './theme.ts';
 import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 import {
   describeLabel,
@@ -36,6 +37,7 @@ function element<T extends HTMLElement>(id: string, type: new () => T): T {
 
 const ui = {
   langToggle: element('lang-toggle', HTMLButtonElement),
+  themeSelect: element('theme-select', HTMLSelectElement),
   dropZone: element('drop-zone', HTMLLabelElement),
   fileInput: element('file-input', HTMLInputElement),
   fileName: element('file-name', HTMLParagraphElement),
@@ -610,6 +612,7 @@ function persistSettings(): void {
     profileId: selectedProfileId(),
     customsForms: selectedCustoms(),
     autoProfile: ui.autoProfileCheckbox.checked,
+    theme: selectedTheme(),
   });
   ui.rememberFailed.hidden = saved;
   if (!saved) ui.rememberCheckbox.checked = false;
@@ -621,8 +624,20 @@ function restoreSettings(): void {
   ui.profileSelect.value = saved.profileId;
   ui.customsSelect.value = saved.customsForms;
   ui.autoProfileCheckbox.checked = saved.autoProfile;
+  ui.themeSelect.value = saved.theme;
+  applyTheme(saved.theme);
   ui.rememberCheckbox.checked = true;
 }
+
+function selectedTheme(): Theme {
+  const value = ui.themeSelect.value;
+  return isTheme(value) ? value : 'system';
+}
+
+ui.themeSelect.addEventListener('change', () => {
+  applyTheme(selectedTheme());
+  persistSettings();
+});
 
 ui.rememberCheckbox.addEventListener('change', () => {
   if (ui.rememberCheckbox.checked) {
