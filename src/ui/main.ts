@@ -20,6 +20,7 @@ import {
   offersShrink,
   outputFileName,
 } from './view.ts';
+import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 
 function element<T extends HTMLElement>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
@@ -37,6 +38,8 @@ const ui = {
   customsField: element('customs-field', HTMLDivElement),
   customsSelect: element('customs-select', HTMLSelectElement),
   shrinkField: element('shrink-field', HTMLDivElement),
+  rememberCheckbox: element('remember-checkbox', HTMLInputElement),
+  rememberFailed: element('remember-failed', HTMLParagraphElement),
   shrinkCheckbox: element('shrink-checkbox', HTMLInputElement),
   status: element('status', HTMLDivElement),
   labelList: element('label-list', HTMLUListElement),
@@ -322,12 +325,48 @@ window.addEventListener('drop', (event) => {
   event.preventDefault();
 });
 
+// ---------------------------------------------------------------- remembered settings
+
+const storage = browserStorage();
+
+/** Writes the current choice, but only while the user has opted in. */
+function persistSettings(): void {
+  if (!ui.rememberCheckbox.checked) return;
+  const saved = saveSettings(storage, {
+    profileId: selectedProfileId(),
+    customsForms: selectedCustoms(),
+  });
+  ui.rememberFailed.hidden = saved;
+  if (!saved) ui.rememberCheckbox.checked = false;
+}
+
+function restoreSettings(): void {
+  const saved = loadSettings(storage);
+  if (!saved) return;
+  ui.profileSelect.value = saved.profileId;
+  ui.customsSelect.value = saved.customsForms;
+  ui.rememberCheckbox.checked = true;
+}
+
+ui.rememberCheckbox.addEventListener('change', () => {
+  if (ui.rememberCheckbox.checked) {
+    persistSettings();
+  } else {
+    forgetSettings(storage);
+    ui.rememberFailed.hidden = true;
+  }
+});
+
 ui.profileSelect.addEventListener('change', () => {
   renderProfileCaution();
   ui.shrinkCheckbox.checked = false;
+  persistSettings();
   process();
 });
-ui.customsSelect.addEventListener('change', process);
+ui.customsSelect.addEventListener('change', () => {
+  persistSettings();
+  process();
+});
 ui.shrinkCheckbox.addEventListener('change', process);
 
 ui.langToggle.addEventListener('click', () => {
@@ -357,6 +396,7 @@ function browserSupported(): boolean {
 
 applyStaticTexts();
 renderProfileOptions();
+restoreSettings();
 renderProfileCaution();
 if (!browserSupported()) {
   ui.fileInput.disabled = true;

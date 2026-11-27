@@ -75,7 +75,9 @@ docs/            user guide, "report a new layout"
   output PDFs, preview bitmaps and a content-free summary (`src/ui/protocol.ts`).
 - Main-thread UI code must not import pdf.js, pdf-lib or core runtime code (ESLint enforced).
 - The production CSP is injected as a meta tag at build time (`vite.config.ts`); CI checks it.
-- No settings are persisted (privacy by default); all text is set via `textContent`.
+- Settings persistence is opt-in ("remember settings", off by default): only profile and
+  customs option in localStorage, validated on read; unticking deletes them. The shrink
+  permission is never stored. All text is set via `textContent`.
 
 ## Maintainer guidelines
 

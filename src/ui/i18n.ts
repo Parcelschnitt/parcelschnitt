@@ -28,6 +28,11 @@ const de = {
   'settings.customs.separateA4': 'Separat auf A4 drucken',
   'settings.customs.omit': 'Nicht drucken',
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
+  'settings.remember': 'Einstellungen auf diesem Gerät merken',
+  'settings.rememberHint':
+    'Gespeichert werden nur Etikettenformat und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
+  'settings.rememberFailed':
+    'Dein Browser erlaubt das Speichern nicht (z. B. im privaten Modus). Die Einstellungen gelten nur für diesen Besuch.',
 
   'caution.tooShortForDhl':
     'Dieses Format ist zu kurz für die DHL-Paketmarke in Originalgröße. DHL verlangt den Druck in 100 %.',
@@ -95,6 +100,11 @@ const en: Record<MessageKey, string> = {
   'settings.customs.separateA4': 'Print separately on A4',
   'settings.customs.omit': 'Do not print',
   'settings.allowShrink': 'Shrink anyway (not recommended)',
+  'settings.remember': 'Remember settings on this device',
+  'settings.rememberHint':
+    'Only the label size and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
+  'settings.rememberFailed':
+    'Your browser does not allow storing settings (e.g. in private mode). They apply to this visit only.',
 
   'caution.tooShortForDhl':
     'This size is too short for a DHL label at full size. DHL requires printing at 100 %.',
