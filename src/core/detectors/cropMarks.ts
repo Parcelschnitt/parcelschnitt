@@ -130,6 +130,7 @@ export function detectCropMarkLabels(page: PageAnalysis, layout: CropMarkLayout)
       contentBox,
       textAngle: dominantTextAngle(members),
       excluded: frame.corners.map((c) => c.box),
+      companionAreas: [],
       requiresFullScale: layout.requiresFullScale,
     });
   }

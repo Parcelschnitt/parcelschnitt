@@ -38,7 +38,7 @@ const pdfjsLib: PdfJsLib = pdfjs;
 const renderLib = pdfjs as unknown as PdfJsRenderLib;
 
 function summarize(outcome: LabelOutcome): LabelSummary {
-  const { detection, fit, target } = outcome;
+  const { detection, fit, target, hiddenText } = outcome;
   return {
     layoutId: detection.layoutId,
     pageIndex: detection.pageIndex,
@@ -46,6 +46,7 @@ function summarize(outcome: LabelOutcome): LabelSummary {
     uprightRotation: normalizeQuarterTurn(360 - detection.textAngle),
     role: detection.role,
     target,
+    hiddenText,
     fit: fit.ok
       ? {
           ok: true,

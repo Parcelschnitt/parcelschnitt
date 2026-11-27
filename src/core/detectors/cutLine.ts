@@ -122,6 +122,8 @@ export function detectCutLineLabel(page: PageAnalysis, layout: CutLineLayout): D
       contentBox,
       textAngle: dominantTextAngle(members),
       excluded,
+      // The other side of the cut line holds the receipt, which the layout expects.
+      companionAreas: [sideRegion(page, line, side === -1 ? 1 : -1)],
       requiresFullScale: layout.requiresFullScale,
     },
   ];

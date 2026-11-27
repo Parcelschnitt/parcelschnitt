@@ -84,6 +84,7 @@ export function detectFramedForm(page: PageAnalysis, layout: FramedFormLayout): 
       contentBox,
       textAngle: dominantTextAngle(members),
       excluded: [],
+      companionAreas: [],
       requiresFullScale: layout.requiresFullScale,
     },
   ];

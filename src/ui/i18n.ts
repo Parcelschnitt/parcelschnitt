@@ -87,6 +87,8 @@ const de = {
   'output.printHint':
     'Beim Drucken „Tatsächliche Größe“ bzw. 100 % wählen, nicht „An Seite anpassen“.',
   'output.previewAlt': 'Vorschau Seite {page}',
+  'output.hiddenText':
+    'Hinweis: Auf der Originalseite steht außerhalb des Etiketts weiterer Text (z. B. eine Rechnung). Er wird nicht gedruckt, ist aber unsichtbar in der Datei enthalten. Zum Drucken ist das unbedenklich, gib die Datei aber nicht weiter.',
 
   'error.fileTooLarge': 'Die Datei ist zu groß (höchstens {mb} MB).',
   'error.emptyFile': 'Die Datei ist leer.',
@@ -118,6 +120,8 @@ const de = {
     'Drucken: Im Druckdialog „Tatsächliche Größe“ bzw. 100 % wählen und im Druckertreiber das passende Etikettenformat einstellen.',
   'more.privacy':
     'Datenschutz: Die PDF wird ausschließlich in deinem Browser verarbeitet. Sie wird nicht hochgeladen, und die Seite lädt keine Inhalte von anderen Servern.',
+  'more.hidden':
+    'Technischer Hinweis: Die erzeugte PDF enthält die Originalseite unsichtbar im Hintergrund, sichtbar und gedruckt wird nur das Etikett. Bei DHL steckt dort der Beleg, der dieselben Angaben wie das Etikett enthält. Steht auf der Seite weiterer Text, etwa eine Rechnung, weist Parcelschnitt dich darauf hin. Gib die Datei in diesem Fall nicht weiter.',
   'more.unknown':
     'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
   'more.disclaimer':
@@ -214,6 +218,8 @@ const en: Record<MessageKey, string> = {
   'output.open': 'Open for printing',
   'output.printHint': 'When printing, choose "Actual size" or 100 %, not "Fit to page".',
   'output.previewAlt': 'Preview page {page}',
+  'output.hiddenText':
+    'Note: the original page contains further text outside the label (e.g. an invoice). It is not printed but remains invisibly in the file. That is fine for printing, but do not pass the file on.',
 
   'error.fileTooLarge': 'The file is too large (at most {mb} MB).',
   'error.emptyFile': 'The file is empty.',
@@ -245,6 +251,8 @@ const en: Record<MessageKey, string> = {
     'Printing: choose "Actual size" or 100 % in the print dialog and set the matching label size in the printer driver.',
   'more.privacy':
     'Privacy: the PDF is processed only in your browser. It is not uploaded, and the page loads nothing from other servers.',
+  'more.hidden':
+    'Technical note: the generated PDF contains the original page invisibly in the background; only the label is visible and printed. For DHL this is the receipt, which repeats the label data. If the page holds further text, such as an invoice, Parcelschnitt tells you. In that case, do not pass the file on.',
   'more.unknown':
     'Label not recognised? Then simply select the area yourself. You can report new label types on GitHub, please without attaching the real PDF.',
   'more.disclaimer':

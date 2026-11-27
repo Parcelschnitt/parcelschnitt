@@ -43,6 +43,7 @@ export function describeLabel(lang: Lang, label: LabelSummary): LabelView {
       );
     }
   }
+  if (label.hiddenText) lines.push({ text: t(lang, 'output.hiddenText'), tone: 'warn' });
   return {
     name: layoutName(lang, label.layoutId),
     target: t(lang, label.target === 'a4Sheet' ? 'target.a4Sheet' : 'target.labelPrinter'),

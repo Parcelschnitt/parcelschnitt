@@ -17,6 +17,7 @@ const geometry = {
 } as const;
 const fits: LabelSummary = {
   ...geometry,
+  hiddenText: false,
   layoutId: 'dhl-paketmarke',
   role: 'shippingLabel',
   target: 'labelPrinter',
@@ -34,6 +35,7 @@ const shrunk: LabelSummary = {
 };
 const cn22: LabelSummary = {
   ...geometry,
+  hiddenText: false,
   layoutId: 'customs-cn22',
   role: 'customsForm',
   target: 'a4Sheet',

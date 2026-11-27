@@ -15,6 +15,12 @@ export interface Detection {
   readonly textAngle: QuarterTurn;
   /** Helper graphics that were deliberately left out (scissors, crop marks, cut line). */
   readonly excluded: readonly Rect[];
+  /**
+   * Parts of the page whose content is known from the layout and expected to sit next to the
+   * label (e.g. the DHL receipt beyond the cut line). Text there does not trigger the
+   * hidden-content notice.
+   */
+  readonly companionAreas: readonly Rect[];
   readonly requiresFullScale: boolean;
 }
 

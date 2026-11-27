@@ -86,6 +86,15 @@ docs/            user guide, "report a new layout"
   them. The shrink
   permission is never stored. All text is set via `textContent`.
 
+## Hidden content in outputs (decision 2026-11-27)
+
+- Outputs embed the whole source page clipped to the label; content outside stays invisibly in
+  the file. Removing it would need a hand-written content-stream parser, which is ruled out.
+- Mitigation instead: `src/core/hiddenContent.ts` flags notable text outside the label and the
+  layout's `companionAreas` (e.g. DHL receipt); the UI then warns not to pass the file on.
+  Outputs never carry source metadata, attachments, scripts or annotations (tested).
+- Revisit if a carrier puts unrelated personal data on the label page.
+
 ## Legal pages
 
 - `impressum.html` (§ 5 DDG) and `datenschutz.html` (GDPR) are static, German binding with an
