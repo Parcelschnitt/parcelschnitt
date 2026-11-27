@@ -9,13 +9,16 @@ import type { Detection } from './detection.ts';
 import { fitToProfile, type FitResult } from './fit.ts';
 import { height, width } from './geometry.ts';
 import type { PdfJsLib } from './pdfjs.ts';
-import { A4_SHEET, type PrinterProfile } from '../profiles/index.ts';
+import { LAYOUTS } from '../layouts/index.ts';
+import { A4_SHEET, getProfile, type PrinterProfile } from '../profiles/index.ts';
+import { manualDetection, type ManualSelection } from './manual.ts';
 
 export { analyzeDocument } from './analyze.ts';
 export { detectLabels } from './detect.ts';
 export { fitToProfile } from './fit.ts';
 export { renderLabels } from './crop.ts';
 export { LIMITS } from './limits.ts';
+export { MANUAL_LAYOUT_ID, MIN_SELECTION_PT, type ManualSelection } from './manual.ts';
 export { ParcelschnittError, type ParcelschnittErrorCode } from './errors.ts';
 export type { Detection } from './detection.ts';
 export type { FitResult, FitWarning, Placement } from './fit.ts';
@@ -36,6 +39,11 @@ export interface CropOptions {
   readonly allowShrink?: boolean;
   /** Default: `withLabels`. */
   readonly customsForms?: CustomsFormOutput;
+  /**
+   * Use the profile recommended for the detected shipping label instead of `profile`
+   * (which stays the fallback when nothing is detected or there is no recommendation).
+   */
+  readonly autoProfile?: boolean;
 }
 
 export interface LabelOutcome {
@@ -55,6 +63,15 @@ export interface CropResult {
   readonly pdf: Uint8Array | null;
   /** For an office printer: customs forms on A4 (only with `separateA4`). */
   readonly a4Pdf: Uint8Array | null;
+  /** The label-printer profile that was used (differs from the option with autoProfile). */
+  readonly profile: PrinterProfile;
+}
+
+/** Profile recommended for the first detected shipping label, if its layout names one. */
+export function recommendedProfile(detections: readonly Detection[]): PrinterProfile | null {
+  const label = detections.find((d) => d.role === 'shippingLabel');
+  const id = label ? LAYOUTS.find((l) => l.id === label.layoutId)?.recommendedProfileId : undefined;
+  return id ? getProfile(id) : null;
 }
 
 function fitDetection(
@@ -91,9 +108,11 @@ export async function cropLabels(
   const customsForms = options.customsForms ?? 'withLabels';
   const allowShrink = options.allowShrink ?? false;
   const pages = await analyzeDocument(bytes, pdfjs);
+  const detections = detectLabels(pages);
+  const profile = (options.autoProfile ? recommendedProfile(detections) : null) ?? options.profile;
 
   const labels: LabelOutcome[] = [];
-  for (const detection of detectLabels(pages)) {
+  for (const detection of detections) {
     const isCustoms = detection.role === 'customsForm';
     if (isCustoms && customsForms === 'omit') continue;
     // Customs forms on A4 are never shrunk; they always fit.
@@ -103,7 +122,7 @@ export async function cropLabels(
         : {
             detection,
             target: 'labelPrinter',
-            fit: fitDetection(detection, options.profile, allowShrink),
+            fit: fitDetection(detection, profile, allowShrink),
           },
     );
   }
@@ -120,5 +139,35 @@ export async function cropLabels(
       pages,
       labels.filter((l) => l.target === 'a4Sheet'),
     ),
+    profile,
+  };
+}
+
+export interface ManualCropOptions {
+  readonly profile: PrinterProfile;
+  readonly allowShrink?: boolean;
+}
+
+/** Crops a user-selected area to the printer profile (no detection involved). */
+export async function cropManual(
+  bytes: Uint8Array,
+  pdfjs: PdfJsLib,
+  selection: ManualSelection,
+  options: ManualCropOptions,
+): Promise<CropResult> {
+  const pages = await analyzeDocument(bytes, pdfjs);
+  const detection = manualDetection(pages, selection);
+  const labels: LabelOutcome[] = [
+    {
+      detection,
+      target: 'labelPrinter',
+      fit: fitDetection(detection, options.profile, options.allowShrink ?? false),
+    },
+  ];
+  return {
+    labels,
+    pdf: await renderFitting(bytes, pages, labels),
+    a4Pdf: null,
+    profile: options.profile,
   };
 }

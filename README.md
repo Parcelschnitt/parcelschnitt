@@ -24,13 +24,13 @@ Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner 
 - Zuschnitt in Originalgröße (100 %); Barcodes bleiben Vektoren und werden nicht gerastert
 - Profile: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
 - Warnung, wenn ein Etikett nicht 1:1 auf das gewählte Format passt; nie stilles Verkleinern
-- Manueller Zuschnitt, wenn kein Layout sicher erkannt wird
+- Manueller Zuschnitt, wenn kein Layout sicher erkannt wird oder die Erkennung danebenliegt
 - Später: Desktop-App mit Direktdruck und überwachtem Ordner
 
 ### Stand
 
-Erkennung, Zuschnitt und eine erste Weboberfläche stehen. Manueller Zuschnitt und die
-Veröffentlichung als Website folgen.
+Erkennung, Zuschnitt, manueller Zuschnitt und die Weboberfläche stehen. Die
+Veröffentlichung als Website folgt.
 
 ### Entwicklung
 
@@ -70,13 +70,13 @@ tracking. Your labels never leave your computer.
 - Cropping at 100 % scale; barcodes stay vectors and are never rasterised
 - Profiles: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
 - A warning when a label does not fit the chosen size 1:1; never silent shrinking
-- Manual cropping when no layout is detected with confidence
+- Manual cropping when no layout is detected with confidence or the detection is off
 - Later: desktop app with direct printing and a watched folder
 
 ### Status
 
-Detection, cropping and a first web interface are in place. Manual cropping and publishing
-the website will follow.
+Detection, cropping, manual cropping and the web interface are in place. Publishing the
+website will follow.
 
 ### Development
 

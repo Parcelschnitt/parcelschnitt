@@ -73,6 +73,8 @@ export function errorMessage(lang: Lang, code: ErrorCode): string {
       return t(lang, 'error.unreadablePdf');
     case 'pageOutOfRange':
       return t(lang, 'error.pageOutOfRange');
+    case 'invalidSelection':
+      return t(lang, 'error.invalidSelection');
     case 'internal':
       return t(lang, 'error.internal');
   }

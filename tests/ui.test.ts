@@ -10,7 +10,13 @@ import {
   outputFileName,
 } from '../src/ui/view.ts';
 
+const geometry = {
+  pageIndex: 0,
+  contentBox: { x0: 0, y0: 0, x1: 10, y1: 10 },
+  uprightRotation: 0,
+} as const;
 const fits: LabelSummary = {
+  ...geometry,
   layoutId: 'dhl-paketmarke',
   role: 'shippingLabel',
   target: 'labelPrinter',
@@ -27,6 +33,7 @@ const shrunk: LabelSummary = {
   },
 };
 const cn22: LabelSummary = {
+  ...geometry,
   layoutId: 'customs-cn22',
   role: 'customsForm',
   target: 'a4Sheet',
@@ -122,6 +129,7 @@ describe('worker protocol guards', () => {
     profileId: 'label-103x199',
     allowShrink: false,
     customsForms: 'withLabels',
+    autoProfile: true,
   };
 
   it('accepts a well-formed request', () => {
@@ -134,6 +142,7 @@ describe('worker protocol guards', () => {
     ['bytes as string', { ...valid, bytes: 'AAAA' }],
     ['non-integer id', { ...valid, id: 1.5 }],
     ['wrong type', { ...valid, type: 'eval' }],
+    ['autoProfile missing', { ...valid, autoProfile: undefined }],
     ['null', null],
   ])('rejects a request with %s', (_name, request) => {
     expect(isProcessRequest(request)).toBe(false);

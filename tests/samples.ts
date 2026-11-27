@@ -5,18 +5,17 @@
  */
 import { readdir, readFile, realpath } from 'node:fs/promises';
 import { join, relative, isAbsolute } from 'node:path';
+import { LAYOUTS } from '../src/layouts/index.ts';
 import type { ProfileId } from '../src/profiles/index.ts';
 
 export const SAMPLES_DIR = process.env['PARCELSCHNITT_SAMPLES'] ?? '';
 
 const REPO_ROOT = join(import.meta.dirname, '..');
 
-/** Default target profile per layout for the printer check. */
-export const DEFAULT_PROFILE: Readonly<Record<string, ProfileId>> = {
-  'dhl-paketmarke': 'label-103x199',
-  internetmarke: 'dymo-99014',
-  'customs-cn22': 'label-103x199',
-};
+/** Target profile for the printer check: the layout's recommendation, else 103 x 199. */
+export function defaultProfileFor(layoutId: string): ProfileId {
+  return LAYOUTS.find((l) => l.id === layoutId)?.recommendedProfileId ?? 'label-103x199';
+}
 
 export async function isInsideRepo(path: string): Promise<boolean> {
   const [root, target] = await Promise.all([realpath(REPO_ROOT), realpath(path)]);

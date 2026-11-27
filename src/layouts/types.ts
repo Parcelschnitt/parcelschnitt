@@ -3,6 +3,8 @@
  * markers and features to look for, never fixed page coordinates.
  */
 
+import type { ProfileId } from '../profiles/index.ts';
+
 /**
  * What a detected area is. Customs forms can be printed together with the labels, on a
  * separate A4 sheet, or not at all; shipping labels always go to the label printer.
@@ -25,6 +27,8 @@ export interface CutLineLayout {
   readonly kind: 'cutLine';
   readonly id: string;
   readonly role: LayoutRole;
+  /** Best-fitting printer profile when the format is chosen automatically. */
+  readonly recommendedProfileId?: ProfileId;
   readonly carrier: string;
   /** All of these must appear on the label side (case-insensitive substring match). */
   readonly markers: readonly string[];
@@ -48,6 +52,8 @@ export interface CropMarkLayout {
   readonly kind: 'cropMarks';
   readonly id: string;
   readonly role: LayoutRole;
+  /** Best-fitting printer profile when the format is chosen automatically. */
+  readonly recommendedProfileId?: ProfileId;
   readonly carrier: string;
   /** Length range of a single cross arm, in pt. */
   readonly armLengthPt: { readonly min: number; readonly max: number };
@@ -66,6 +72,8 @@ export interface FramedFormLayout {
   readonly kind: 'framedForm';
   readonly id: string;
   readonly role: LayoutRole;
+  /** Best-fitting printer profile when the format is chosen automatically. */
+  readonly recommendedProfileId?: ProfileId;
   readonly carrier: string;
   /**
    * All of these must appear inside the frame. Matching ignores case and whitespace,

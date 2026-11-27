@@ -74,9 +74,16 @@ docs/            user guide, "report a new layout"
   renders previews to OffscreenCanvas (`src/ui/preview.ts`). The main thread only receives
   output PDFs, preview bitmaps and a content-free summary (`src/ui/protocol.ts`).
 - Main-thread UI code must not import pdf.js, pdf-lib or core runtime code (ESLint enforced).
+- Manual cropping: the worker renders the source pages (`pages` request); the user frames the
+  label in `selectionEditor.ts` (pure geometry in `selection.ts`); `cropManual()` in the core
+  uses the same fit and vector cropping as detection. Without a detection it opens
+  automatically; otherwise it is pre-filled with the detected area.
 - The production CSP is injected as a meta tag at build time (`vite.config.ts`); CI checks it.
-- Settings persistence is opt-in ("remember settings", off by default): only profile and
-  customs option in localStorage, validated on read; unticking deletes them. The shrink
+- Format choice: "choose the size to match the label" (on by default) uses the layout's
+  `recommendedProfileId`; a manual change applies to the current file; off = last chosen.
+- Settings persistence is opt-in ("remember settings", off by default): only profile,
+  auto-format choice and customs option in localStorage, validated on read; unticking deletes
+  them. The shrink
   permission is never stored. All text is set via `textContent`.
 
 ## Legal pages

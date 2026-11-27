@@ -9,6 +9,7 @@ export const customsCn22: FramedFormLayout = {
   kind: 'framedForm',
   id: 'customs-cn22',
   role: 'customsForm',
+  // No own recommendation: customs forms follow the shipping label's profile.
   carrier: 'Deutsche Post / DHL',
   markers: ['CN22'],
   expectedFrameMm: { long: 110, short: 79, tolerance: 5 },

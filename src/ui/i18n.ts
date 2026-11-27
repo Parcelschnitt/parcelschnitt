@@ -23,6 +23,9 @@ const de = {
 
   'settings.title': 'Einstellungen',
   'settings.profile': 'Etikettenformat',
+  'settings.autoProfile': 'Format passend zum Etikett wählen',
+  'settings.autoProfileHint':
+    'Zum Beispiel DHL-Paketmarke → 103 × 199 mm, Internetmarke → DYMO 99014. Änderst du das Format von Hand, gilt das für die aktuelle Datei.',
   'settings.customs': 'Zollinhaltserklärung (CN22)',
   'settings.customs.withLabels': 'Eigenes Etikett im gleichen Format',
   'settings.customs.separateA4': 'Separat auf A4-Papier',
@@ -30,7 +33,7 @@ const de = {
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
   'settings.remember': 'Einstellungen auf diesem Gerät merken',
   'settings.rememberHint':
-    'Gespeichert werden nur Etikettenformat und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
+    'Gespeichert werden nur Etikettenformat, automatische Formatwahl und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
   'settings.rememberFailed':
     'Dein Browser erlaubt das Speichern nicht (z. B. im privaten Modus). Die Einstellungen gelten nur für diesen Besuch.',
 
@@ -39,12 +42,33 @@ const de = {
 
   'status.processing': 'Wird verarbeitet …',
   'status.noLabel':
-    'In dieser PDF wurde kein bekanntes Etikett sicher erkannt. Manueller Zuschnitt folgt in einer späteren Version.',
+    'In dieser PDF wurde kein bekanntes Etikett sicher erkannt. Wähle den Bereich oben selbst aus.',
+  'status.manualPending': 'Ziehe den Rahmen über das Etikett, das Ergebnis erscheint dann hier.',
   'status.found': '{count} Element(e) erkannt.',
+  'status.profileChosen': 'Format automatisch gewählt: {profile}.',
 
   'layout.dhl-paketmarke': 'DHL-Paketmarke',
   'layout.internetmarke': 'Internetmarke',
   'layout.customs-cn22': 'Zollinhaltserklärung CN22',
+  'layout.manual': 'Manuell gewählter Bereich',
+
+  'manual.title': 'Bereich selbst wählen',
+  'manual.start': 'Bereich selbst wählen',
+  'manual.hint':
+    'Ziehe den Rahmen über das Etikett und passe ihn an den Ecken an. Lass Scheren, Passerkreuze und Belege außen vor. Mit den Pfeilen drehst du das Ergebnis, bis die Schrift aufrecht steht.',
+  'manual.loading': 'Seiten werden geladen …',
+  'manual.page': 'Seite',
+  'manual.pageOption': 'Seite {page} von {count}',
+  'manual.left': 'Links (mm)',
+  'manual.top': 'Oben (mm)',
+  'manual.width': 'Breite (mm)',
+  'manual.height': 'Höhe (mm)',
+  'manual.rotateLeft': '↺ Links drehen',
+  'manual.rotateRight': 'Rechts drehen ↻',
+  'manual.rotation': 'Drehung: {degrees}°',
+  'manual.frame':
+    'Auswahlrahmen. Mit den Pfeiltasten verschieben, mit gedrückter Umschalttaste in größeren Schritten. Größe über die Felder in Millimetern.',
+  'manual.back': 'Zurück zur automatischen Erkennung',
 
   'target.labelPrinter': 'Etikettendrucker',
   'target.a4Sheet': 'A4-Drucker',
@@ -70,6 +94,8 @@ const de = {
   'error.tooManyPages': 'Die PDF hat zu viele Seiten (höchstens {pages}).',
   'error.unreadablePdf': 'Die PDF konnte nicht gelesen werden.',
   'error.pageOutOfRange': 'Die PDF konnte nicht verarbeitet werden.',
+  'error.invalidSelection':
+    'Der gewählte Bereich ist zu klein oder liegt außerhalb der Seite (mindestens 10 × 10 mm).',
   'error.internal': 'Unerwarteter Fehler. Bitte versuche es erneut.',
   'error.unsupportedBrowser':
     'Dein Browser wird nicht unterstützt. Bitte verwende eine aktuelle Version von Firefox, Chrome, Edge oder Safari.',
@@ -93,7 +119,7 @@ const de = {
   'more.privacy':
     'Datenschutz: Die PDF wird ausschließlich in deinem Browser verarbeitet. Sie wird nicht hochgeladen, und die Seite lädt keine Inhalte von anderen Servern.',
   'more.unknown':
-    'Etikett nicht erkannt? Manueller Zuschnitt folgt. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
+    'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
   'more.disclaimer':
     'Parcelschnitt ist ein unabhängiges Open-Source-Projekt und steht in keiner Verbindung zu DHL oder der Deutschen Post.',
   'support.title': 'Parcelschnitt unterstützen',
@@ -125,6 +151,9 @@ const en: Record<MessageKey, string> = {
 
   'settings.title': 'Settings',
   'settings.profile': 'Label size',
+  'settings.autoProfile': 'Choose the size to match the label',
+  'settings.autoProfileHint':
+    'For example DHL Paketmarke → 103 × 199 mm, Internetmarke → DYMO 99014. If you change the size by hand, that applies to the current file.',
   'settings.customs': 'Customs declaration (CN22)',
   'settings.customs.withLabels': 'Own label in the same size',
   'settings.customs.separateA4': 'Separately on A4 paper',
@@ -132,7 +161,7 @@ const en: Record<MessageKey, string> = {
   'settings.allowShrink': 'Shrink anyway (not recommended)',
   'settings.remember': 'Remember settings on this device',
   'settings.rememberHint':
-    'Only the label size and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
+    'Only the label size, the automatic size choice and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
   'settings.rememberFailed':
     'Your browser does not allow storing settings (e.g. in private mode). They apply to this visit only.',
 
@@ -141,12 +170,33 @@ const en: Record<MessageKey, string> = {
 
   'status.processing': 'Processing …',
   'status.noLabel':
-    'No known label was detected with confidence in this PDF. Manual cropping will follow in a later version.',
+    'No known label was detected with confidence in this PDF. Please select the area above.',
+  'status.manualPending': 'Drag the frame over the label; the result then appears here.',
   'status.found': '{count} item(s) detected.',
+  'status.profileChosen': 'Size chosen automatically: {profile}.',
 
   'layout.dhl-paketmarke': 'DHL Paketmarke',
   'layout.internetmarke': 'Internetmarke',
   'layout.customs-cn22': 'Customs declaration CN22',
+  'layout.manual': 'Manually selected area',
+
+  'manual.title': 'Select the area yourself',
+  'manual.start': 'Select the area yourself',
+  'manual.hint':
+    'Drag the frame over the label and adjust it at the corners. Leave scissors, crop marks and receipts outside. Use the arrows to turn the result until the text is upright.',
+  'manual.loading': 'Loading pages …',
+  'manual.page': 'Page',
+  'manual.pageOption': 'Page {page} of {count}',
+  'manual.left': 'Left (mm)',
+  'manual.top': 'Top (mm)',
+  'manual.width': 'Width (mm)',
+  'manual.height': 'Height (mm)',
+  'manual.rotateLeft': '↺ Turn left',
+  'manual.rotateRight': 'Turn right ↻',
+  'manual.rotation': 'Rotation: {degrees}°',
+  'manual.frame':
+    'Selection frame. Move it with the arrow keys, hold Shift for larger steps. Change the size with the millimetre fields.',
+  'manual.back': 'Back to automatic detection',
 
   'target.labelPrinter': 'Label printer',
   'target.a4Sheet': 'A4 printer',
@@ -171,6 +221,8 @@ const en: Record<MessageKey, string> = {
   'error.tooManyPages': 'The PDF has too many pages (at most {pages}).',
   'error.unreadablePdf': 'The PDF could not be read.',
   'error.pageOutOfRange': 'The PDF could not be processed.',
+  'error.invalidSelection':
+    'The selected area is too small or outside the page (at least 10 × 10 mm).',
   'error.internal': 'Unexpected error. Please try again.',
   'error.unsupportedBrowser':
     'Your browser is not supported. Please use a current version of Firefox, Chrome, Edge or Safari.',
@@ -194,7 +246,7 @@ const en: Record<MessageKey, string> = {
   'more.privacy':
     'Privacy: the PDF is processed only in your browser. It is not uploaded, and the page loads nothing from other servers.',
   'more.unknown':
-    'Label not recognised? Manual cropping will follow. You can report new label types on GitHub, please without attaching the real PDF.',
+    'Label not recognised? Then simply select the area yourself. You can report new label types on GitHub, please without attaching the real PDF.',
   'more.disclaimer':
     'Parcelschnitt is an independent open-source project and is not affiliated with DHL or Deutsche Post.',
   'support.title': 'Support Parcelschnitt',

@@ -152,7 +152,7 @@ describe('no label', () => {
     const result = await cropLabels(await fixture('unrelated.pdf'), pdfjs, {
       profile: getProfile('label-103x199'),
     });
-    expect(result).toEqual({ labels: [], pdf: null, a4Pdf: null });
+    expect(result).toMatchObject({ labels: [], pdf: null, a4Pdf: null });
   });
 
   it('analyses the output again without errors (round trip)', async () => {
@@ -252,5 +252,34 @@ describe('customs form output options', () => {
     });
     expect(result.a4Pdf).toBeNull();
     expect(result.labels).toHaveLength(1);
+  });
+});
+
+describe('automatic format choice', () => {
+  const crop = async (name: string) =>
+    cropLabels(await fixture(name), pdfjs, {
+      profile: getProfile('brother-62'),
+      autoProfile: true,
+    });
+
+  it.each([
+    ['dhl-paketmarke.pdf', 'label-103x199'],
+    ['internetmarke.pdf', 'dymo-99014'],
+    ['dhl-international-cn22.pdf', 'label-103x199'],
+  ])('picks the recommended size for %s', async (name, expected) => {
+    const result = await crop(name);
+    expect(result.profile.id).toBe(expected);
+    for (const label of result.labels) expect(label.fit.ok).toBe(true);
+  });
+
+  it('keeps the given size when nothing is detected', async () => {
+    expect((await crop('unrelated.pdf')).profile.id).toBe('brother-62');
+  });
+
+  it('keeps the given size when automatic choice is off', async () => {
+    const result = await cropLabels(await fixture('internetmarke.pdf'), pdfjs, {
+      profile: getProfile('label-103x199'),
+    });
+    expect(result.profile.id).toBe('label-103x199');
   });
 });

@@ -2,9 +2,9 @@
  * Optional, user-initiated persistence of preferences. Off by default (privacy by default):
  * nothing is written until the user ticks "remember settings", and unticking deletes it.
  *
- * Only the label size and the customs option are stored, never file data, and never the
- * permission to shrink (that stays a deliberate per-file decision). Stored data is treated
- * as untrusted and validated on read.
+ * Only the label size, the customs option and the auto-format choice are stored, never file
+ * data, and never the permission to shrink (that stays a deliberate per-file decision).
+ * Stored data is treated as untrusted and validated on read.
  */
 import type { CustomsFormOutput } from '../core/index.ts';
 import type { ProfileId } from '../profiles/index.ts';
@@ -15,6 +15,8 @@ export const SETTINGS_KEY = 'parcelschnitt.settings.v1';
 export interface Settings {
   readonly profileId: ProfileId;
   readonly customsForms: CustomsFormOutput;
+  /** Choose the format to match the label. Missing in older stored data: on. */
+  readonly autoProfile: boolean;
 }
 
 /** The subset of the Web Storage API used here (injectable for tests). */
@@ -32,9 +34,10 @@ export function parseSettings(raw: string | null): Settings | null {
     return null;
   }
   if (typeof data !== 'object' || data === null) return null;
-  const { profileId, customsForms } = data as Record<string, unknown>;
+  const { profileId, customsForms, autoProfile = true } = data as Record<string, unknown>;
   if (!isProfileId(profileId) || !isCustomsOption(customsForms)) return null;
-  return { profileId, customsForms };
+  if (typeof autoProfile !== 'boolean') return null;
+  return { profileId, customsForms, autoProfile };
 }
 
 /** Stored settings, or null when none (or invalid ones) exist or storage is unavailable. */
@@ -52,7 +55,11 @@ export function saveSettings(storage: SettingsStorage | null, settings: Settings
   try {
     storage.setItem(
       SETTINGS_KEY,
-      JSON.stringify({ profileId: settings.profileId, customsForms: settings.customsForms }),
+      JSON.stringify({
+        profileId: settings.profileId,
+        customsForms: settings.customsForms,
+        autoProfile: settings.autoProfile,
+      }),
     );
     return true;
   } catch {

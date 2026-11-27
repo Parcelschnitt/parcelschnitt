@@ -8,6 +8,7 @@ export const internetmarke: CropMarkLayout = {
   kind: 'cropMarks',
   id: 'internetmarke',
   role: 'shippingLabel',
+  recommendedProfileId: 'dymo-99014',
   carrier: 'Deutsche Post',
   armLengthPt: { min: 8, max: 24 },
   expectedFrameMm: { long: 90, short: 47, tolerance: 10 },
