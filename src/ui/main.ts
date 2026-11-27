@@ -3,6 +3,7 @@
  * results. All text goes through `textContent`.
  */
 import type { CustomsFormOutput } from '../core/index.ts';
+import type { QuarterTurn } from '../core/geometry.ts';
 import { LIMITS } from '../core/limits.ts';
 import { PROFILES, getProfile, type ProfileId } from '../profiles/index.ts';
 import { detectLang, isMessageKey, t, type Lang } from './i18n.ts';
@@ -10,9 +11,15 @@ import {
   isProfileId,
   isWorkerResponse,
   type ErrorCode,
+  type ManualRequest,
+  type PageImage,
+  type PagesRequest,
   type ProcessRequest,
   type ResultResponse,
 } from './protocol.ts';
+import { defaultSelection, fromMm, toMm, turn, type Box } from './selection.ts';
+import { SelectionEditor } from './selectionEditor.ts';
+import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 import {
   describeLabel,
   errorMessage,
@@ -20,7 +27,6 @@ import {
   offersShrink,
   outputFileName,
 } from './view.ts';
-import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 
 function element<T extends HTMLElement>(id: string, type: new () => T): T {
   const el = document.getElementById(id);
@@ -38,9 +44,23 @@ const ui = {
   customsField: element('customs-field', HTMLDivElement),
   customsSelect: element('customs-select', HTMLSelectElement),
   shrinkField: element('shrink-field', HTMLDivElement),
+  shrinkCheckbox: element('shrink-checkbox', HTMLInputElement),
   rememberCheckbox: element('remember-checkbox', HTMLInputElement),
   rememberFailed: element('remember-failed', HTMLParagraphElement),
-  shrinkCheckbox: element('shrink-checkbox', HTMLInputElement),
+  manualSection: element('manual-section', HTMLElement),
+  manualLoading: element('manual-loading', HTMLParagraphElement),
+  manualPageField: element('manual-page-field', HTMLDivElement),
+  manualPage: element('manual-page', HTMLSelectElement),
+  manualEditor: element('manual-editor', HTMLDivElement),
+  manualLeft: element('manual-left', HTMLInputElement),
+  manualTop: element('manual-top', HTMLInputElement),
+  manualWidth: element('manual-width', HTMLInputElement),
+  manualHeight: element('manual-height', HTMLInputElement),
+  manualRotateLeft: element('manual-rotate-left', HTMLButtonElement),
+  manualRotateRight: element('manual-rotate-right', HTMLButtonElement),
+  manualRotation: element('manual-rotation', HTMLSpanElement),
+  manualBack: element('manual-back', HTMLButtonElement),
+  manualStart: element('manual-start', HTMLButtonElement),
   outputSection: element('output-section', HTMLElement),
   status: element('status', HTMLDivElement),
   labelList: element('label-list', HTMLUListElement),
@@ -55,10 +75,24 @@ const ui = {
   printHint: element('print-hint', HTMLParagraphElement),
 };
 
+interface ManualState {
+  pageIndex: number;
+  box: Box;
+  rotation: QuarterTurn;
+  /** The user has edited the frame (or it was pre-filled): results can be computed. */
+  ready: boolean;
+}
+
 interface State {
   lang: Lang;
   file: { name: string; bytes: ArrayBuffer } | null;
+  mode: 'auto' | 'manual';
+  /** Latest crop request (auto or manual); older responses are ignored. */
   requestId: number;
+  /** Latest page-rendering request, counted separately from crop requests. */
+  pagesRequestId: number;
+  pages: readonly PageImage[] | null;
+  manual: ManualState | null;
   lastResult: ResultResponse | null;
   lastError: ErrorCode | null;
   objectUrls: string[];
@@ -67,7 +101,11 @@ interface State {
 const state: State = {
   lang: detectLang(navigator.languages),
   file: null,
+  mode: 'auto',
   requestId: 0,
+  pagesRequestId: 0,
+  pages: null,
+  manual: null,
   lastResult: null,
   lastError: null,
   objectUrls: [],
@@ -184,7 +222,6 @@ function renderLabelList(result: ResultResponse): void {
 }
 
 function setStatus(text: string, isError = false): void {
-  ui.outputSection.hidden = text === '';
   ui.status.textContent = text;
   ui.status.classList.toggle('error', isError);
 }
@@ -203,21 +240,32 @@ function clearResults(): void {
 
 function renderResult(): void {
   clearResults();
+  ui.outputSection.hidden = state.file === null && state.lastError === null;
+  ui.manualStart.hidden = state.mode === 'manual' || state.lastResult === null;
   if (state.lastError) {
     setStatus(errorMessage(state.lang, state.lastError), true);
     return;
   }
   const result = state.lastResult;
   if (!result) {
-    setStatus('');
+    const waitingForSelection = state.mode === 'manual' && !state.manual?.ready;
+    setStatus(
+      waitingForSelection
+        ? `${t(state.lang, 'status.noLabel')} ${t(state.lang, 'status.manualPending')}`
+        : t(state.lang, 'status.processing'),
+    );
     return;
   }
-  if (result.labels.length === 0) {
-    setStatus(t(state.lang, 'status.noLabel'));
+  if (state.mode === 'auto') {
+    setStatus(
+      result.labels.length === 0
+        ? t(state.lang, 'status.noLabel')
+        : t(state.lang, 'status.found', { count: result.labels.length }),
+    );
+    ui.customsField.hidden = !hasCustomsForm(result.labels);
   } else {
-    setStatus(t(state.lang, 'status.found', { count: result.labels.length }));
+    setStatus('');
   }
-  ui.customsField.hidden = !hasCustomsForm(result.labels);
   ui.shrinkField.hidden = !offersShrink(result.labels) && !ui.shrinkCheckbox.checked;
   renderLabelList(result);
   showOutput(
@@ -243,8 +291,13 @@ function renderResult(): void {
 
 // ---------------------------------------------------------------- processing
 
+/** Sends a crop request for the current mode. */
 function process(): void {
   if (!state.file) return;
+  if (state.mode === 'manual') {
+    processManual();
+    return;
+  }
   state.requestId += 1;
   const request: ProcessRequest = {
     type: 'process',
@@ -255,19 +308,74 @@ function process(): void {
     allowShrink: ui.shrinkCheckbox.checked,
     customsForms: selectedCustoms(),
   };
+  state.lastResult = null;
   setStatus(t(state.lang, 'status.processing'));
+  worker.postMessage(request, [request.bytes]);
+}
+
+function processManual(): void {
+  if (!state.file || !state.manual?.ready) {
+    renderResult();
+    return;
+  }
+  state.requestId += 1;
+  const request: ManualRequest = {
+    type: 'manual',
+    id: state.requestId,
+    bytes: state.file.bytes.slice(0),
+    profileId: selectedProfileId(),
+    allowShrink: ui.shrinkCheckbox.checked,
+    pageIndex: state.manual.pageIndex,
+    box: state.manual.box,
+    rotation: state.manual.rotation,
+  };
+  setStatus(t(state.lang, 'status.processing'));
+  worker.postMessage(request, [request.bytes]);
+}
+
+let manualTimer: ReturnType<typeof setTimeout> | undefined;
+
+/** Recomputes the manual crop shortly after the last edit (keyboard repeats, typing). */
+function scheduleManual(): void {
+  clearTimeout(manualTimer);
+  manualTimer = setTimeout(processManual, 250);
+}
+
+function requestPages(): void {
+  if (!state.file) return;
+  state.pagesRequestId += 1;
+  const request: PagesRequest = {
+    type: 'pages',
+    id: state.pagesRequestId,
+    bytes: state.file.bytes.slice(0),
+  };
+  ui.manualLoading.hidden = false;
   worker.postMessage(request, [request.bytes]);
 }
 
 worker.addEventListener('message', (event: MessageEvent<unknown>) => {
   const response = event.data;
-  if (!isWorkerResponse(response) || response.id !== state.requestId) return;
+  if (!isWorkerResponse(response)) return;
+  if (response.type === 'pages') {
+    if (response.id !== state.pagesRequestId) return;
+    for (const page of state.pages ?? []) page.bitmap.close();
+    state.pages = response.pages;
+    ui.manualLoading.hidden = true;
+    showManualPage();
+    return;
+  }
+  if (response.id !== state.requestId) {
+    // A pages request may fail too; its error is shown like any other.
+    if (!(response.type === 'error' && response.id === state.pagesRequestId)) return;
+    ui.manualLoading.hidden = true;
+  }
   if (response.type === 'error') {
     state.lastResult = null;
     state.lastError = response.code;
   } else {
     state.lastResult = response;
     state.lastError = null;
+    if (state.mode === 'auto' && response.labels.length === 0) enterManual();
   }
   renderResult();
 });
@@ -278,9 +386,151 @@ worker.addEventListener('error', () => {
   renderResult();
 });
 
+// ---------------------------------------------------------------- manual cropping
+
+const editor = new SelectionEditor(
+  ui.manualEditor,
+  t(state.lang, 'manual.frame'),
+  (box) => {
+    if (!state.manual) return;
+    state.manual.box = box;
+    syncManualInputs();
+  },
+  (box) => {
+    if (!state.manual) return;
+    state.manual.box = box;
+    state.manual.ready = true;
+    syncManualInputs();
+    scheduleManual();
+  },
+);
+
+function syncManualInputs(): void {
+  if (!state.manual) return;
+  const mm = toMm(state.manual.box);
+  ui.manualLeft.value = String(mm.left);
+  ui.manualTop.value = String(mm.top);
+  ui.manualWidth.value = String(mm.width);
+  ui.manualHeight.value = String(mm.height);
+  ui.manualRotation.textContent = t(state.lang, 'manual.rotation', {
+    degrees: state.manual.rotation,
+  });
+}
+
+function renderPageOptions(): void {
+  const count = state.pages?.length ?? 0;
+  ui.manualPageField.hidden = count < 2;
+  ui.manualPage.replaceChildren(
+    ...Array.from({ length: count }, (_, index) => {
+      const option = document.createElement('option');
+      option.value = String(index);
+      option.textContent = t(state.lang, 'manual.pageOption', { page: index + 1, count });
+      option.selected = index === state.manual?.pageIndex;
+      return option;
+    }),
+  );
+}
+
+function showManualPage(): void {
+  const manual = state.manual;
+  const page = manual ? state.pages?.[manual.pageIndex] : undefined;
+  if (!manual || !page) return;
+  // Nothing chosen yet: start with a frame in the middle of the page.
+  if (!manual.ready) manual.box = defaultSelection(page);
+  editor.setPage(page.bitmap, page, manual.box);
+  renderPageOptions();
+  syncManualInputs();
+}
+
+/** Switches to manual mode, pre-filled with a detected label if there is one. */
+function enterManual(): void {
+  const detected = state.lastResult?.labels.find((l) => l.role === 'shippingLabel');
+  state.mode = 'manual';
+  state.manual = detected
+    ? {
+        pageIndex: detected.pageIndex,
+        box: detected.contentBox,
+        rotation: detected.uprightRotation,
+        ready: true,
+      }
+    : { pageIndex: 0, box: { x0: 0, y0: 0, x1: 1, y1: 1 }, rotation: 0, ready: false };
+  // The automatic result no longer applies; the manual crop produces a new one.
+  state.lastResult = null;
+  ui.manualSection.hidden = false;
+  ui.customsField.hidden = true;
+  if (state.pages) showManualPage();
+  else requestPages();
+  if (state.manual.ready) processManual();
+  else renderResult();
+  ui.manualSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function exitManual(): void {
+  state.mode = 'auto';
+  state.manual = null;
+  ui.manualSection.hidden = true;
+  process();
+}
+
+ui.manualStart.addEventListener('click', enterManual);
+ui.manualBack.addEventListener('click', exitManual);
+
+ui.manualPage.addEventListener('change', () => {
+  const index = Number(ui.manualPage.value);
+  const page = state.pages?.[index];
+  if (!state.manual || !page) return;
+  state.manual.pageIndex = index;
+  state.manual.box = defaultSelection(page);
+  state.manual.ready = false;
+  showManualPage();
+  renderResult();
+});
+
+for (const input of [ui.manualLeft, ui.manualTop, ui.manualWidth, ui.manualHeight]) {
+  input.addEventListener('change', () => {
+    const manual = state.manual;
+    const page = manual ? state.pages?.[manual.pageIndex] : undefined;
+    if (!manual || !page) return;
+    manual.box = fromMm(
+      {
+        left: ui.manualLeft.valueAsNumber,
+        top: ui.manualTop.valueAsNumber,
+        width: ui.manualWidth.valueAsNumber,
+        height: ui.manualHeight.valueAsNumber,
+      },
+      manual.box,
+      page,
+    );
+    manual.ready = true;
+    editor.setBox(manual.box);
+    syncManualInputs();
+    scheduleManual();
+  });
+}
+
+function rotateManual(direction: 1 | -1): void {
+  if (!state.manual) return;
+  state.manual.rotation = turn(state.manual.rotation, direction);
+  syncManualInputs();
+  if (state.manual.ready) scheduleManual();
+}
+ui.manualRotateLeft.addEventListener('click', () => {
+  rotateManual(-1);
+});
+ui.manualRotateRight.addEventListener('click', () => {
+  rotateManual(1);
+});
+
+// ---------------------------------------------------------------- file input
+
 async function acceptFile(file: File): Promise<void> {
+  for (const page of state.pages ?? []) page.bitmap.close();
+  state.pages = null;
+  state.manual = null;
+  state.mode = 'auto';
   state.lastResult = null;
   state.lastError = null;
+  ui.manualSection.hidden = true;
   ui.shrinkCheckbox.checked = false;
   ui.fileName.hidden = false;
   ui.fileName.textContent = t(state.lang, 'file.selected', { name: file.name });
@@ -292,10 +542,9 @@ async function acceptFile(file: File): Promise<void> {
     return;
   }
   state.file = { name: file.name, bytes: await file.arrayBuffer() };
+  ui.outputSection.hidden = false;
   process();
 }
-
-// ---------------------------------------------------------------- events
 
 ui.fileInput.addEventListener('change', () => {
   const file = ui.fileInput.files?.[0];
@@ -375,6 +624,9 @@ ui.langToggle.addEventListener('click', () => {
   state.lang = state.lang === 'de' ? 'en' : 'de';
   applyStaticTexts();
   renderProfileCaution();
+  editor.setLabel(t(state.lang, 'manual.frame'));
+  renderPageOptions();
+  syncManualInputs();
   if (state.file) {
     ui.fileName.textContent = t(state.lang, 'file.selected', { name: state.file.name });
     // Preview bitmaps were handed over to their canvases; fetch fresh results.
@@ -402,5 +654,6 @@ restoreSettings();
 renderProfileCaution();
 if (!browserSupported()) {
   ui.fileInput.disabled = true;
+  ui.outputSection.hidden = false;
   setStatus(t(state.lang, 'error.unsupportedBrowser'), true);
 }

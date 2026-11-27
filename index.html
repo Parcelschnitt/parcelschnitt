@@ -83,10 +83,64 @@
         <p id="remember-failed" class="caution" data-i18n="settings.rememberFailed" hidden></p>
       </section>
 
+      <section id="manual-section" class="card" aria-labelledby="manual-heading" hidden>
+        <h2 id="manual-heading" data-i18n="manual.title"></h2>
+        <p class="hint" data-i18n="manual.hint"></p>
+        <p id="manual-loading" class="hint" data-i18n="manual.loading" hidden></p>
+        <div class="field" id="manual-page-field" hidden>
+          <label for="manual-page" data-i18n="manual.page"></label>
+          <select id="manual-page"></select>
+        </div>
+        <div id="manual-editor" class="manual-editor"></div>
+        <div class="manual-controls">
+          <div class="mm-inputs">
+            <label
+              ><span data-i18n="manual.left"></span>
+              <input id="manual-left" type="number" min="0" step="0.5" inputmode="decimal"
+            /></label>
+            <label
+              ><span data-i18n="manual.top"></span>
+              <input id="manual-top" type="number" min="0" step="0.5" inputmode="decimal"
+            /></label>
+            <label
+              ><span data-i18n="manual.width"></span>
+              <input id="manual-width" type="number" min="10" step="0.5" inputmode="decimal"
+            /></label>
+            <label
+              ><span data-i18n="manual.height"></span>
+              <input id="manual-height" type="number" min="10" step="0.5" inputmode="decimal"
+            /></label>
+          </div>
+          <div class="rotation">
+            <button
+              type="button"
+              id="manual-rotate-left"
+              class="button"
+              data-i18n="manual.rotateLeft"
+            ></button>
+            <span id="manual-rotation" aria-live="polite"></span>
+            <button
+              type="button"
+              id="manual-rotate-right"
+              class="button"
+              data-i18n="manual.rotateRight"
+            ></button>
+          </div>
+        </div>
+        <button type="button" id="manual-back" class="link-button" data-i18n="manual.back"></button>
+      </section>
+
       <section id="output-section" class="card" aria-labelledby="output-heading" hidden>
         <h2 id="output-heading" data-i18n="output.title"></h2>
         <div id="status" class="status" role="status" aria-live="polite"></div>
         <ul id="label-list" class="label-list"></ul>
+        <button
+          type="button"
+          id="manual-start"
+          class="link-button"
+          data-i18n="manual.start"
+          hidden
+        ></button>
 
         <div id="label-output" class="output" hidden>
           <h3 data-i18n="output.labels"></h3>

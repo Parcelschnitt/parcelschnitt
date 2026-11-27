@@ -10,7 +10,13 @@ import {
   outputFileName,
 } from '../src/ui/view.ts';
 
+const geometry = {
+  pageIndex: 0,
+  contentBox: { x0: 0, y0: 0, x1: 10, y1: 10 },
+  uprightRotation: 0,
+} as const;
 const fits: LabelSummary = {
+  ...geometry,
   layoutId: 'dhl-paketmarke',
   role: 'shippingLabel',
   target: 'labelPrinter',
@@ -27,6 +33,7 @@ const shrunk: LabelSummary = {
   },
 };
 const cn22: LabelSummary = {
+  ...geometry,
   layoutId: 'customs-cn22',
   role: 'customsForm',
   target: 'a4Sheet',

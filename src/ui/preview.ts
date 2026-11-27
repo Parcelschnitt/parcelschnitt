@@ -3,7 +3,16 @@
  * parses a PDF. pdf.js normally creates DOM canvases and SVG filters; in a worker there is no
  * DOM, so minimal replacements are supplied.
  */
+import { ParcelschnittError } from '../core/errors.ts';
+import { assertAcceptableInput, assertPageCount } from '../core/limits.ts';
 import { safeDocumentParams, type PdfJsDocumentParams } from '../core/pdfjs.ts';
+
+/** A rendered page and its displayed size in PDF points (view space). */
+export interface RenderedPage {
+  readonly bitmap: ImageBitmap;
+  readonly widthPt: number;
+  readonly heightPt: number;
+}
 
 /** Longest side of a preview bitmap in device pixels. */
 const MAX_PREVIEW_PX = 1400;
@@ -94,11 +103,12 @@ export interface PdfJsRenderLib {
   };
 }
 
-/** Renders every page of `bytes` to an ImageBitmap. */
+/** Renders every page of `bytes` (untrusted input: limits are enforced) to bitmaps. */
 export async function renderPreviews(
   bytes: Uint8Array,
   pdfjs: PdfJsRenderLib,
-): Promise<ImageBitmap[]> {
+): Promise<RenderedPage[]> {
+  assertAcceptableInput(bytes);
   const task = pdfjs.getDocument({
     ...safeDocumentParams(bytes),
     CanvasFactory: OffscreenCanvasFactory,
@@ -106,8 +116,14 @@ export async function renderPreviews(
     isOffscreenCanvasSupported: true,
   });
   try {
-    const doc = await task.promise;
-    const bitmaps: ImageBitmap[] = [];
+    let doc;
+    try {
+      doc = await task.promise;
+    } catch {
+      throw new ParcelschnittError('unreadablePdf', 'The PDF could not be read.');
+    }
+    assertPageCount(doc.numPages);
+    const pages: RenderedPage[] = [];
     for (let n = 1; n <= doc.numPages; n++) {
       const page = await doc.getPage(n);
       const base = page.getViewport({ scale: 1 });
@@ -118,9 +134,13 @@ export async function renderPreviews(
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       await page.render({ canvas, viewport }).promise;
-      bitmaps.push(canvas.transferToImageBitmap());
+      pages.push({
+        bitmap: canvas.transferToImageBitmap(),
+        widthPt: base.width,
+        heightPt: base.height,
+      });
     }
-    return bitmaps;
+    return pages;
   } finally {
     await task.destroy();
   }
