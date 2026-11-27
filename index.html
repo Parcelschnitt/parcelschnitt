@@ -19,10 +19,16 @@
           <p class="tagline" data-i18n="app.tagline"></p>
         </div>
       </div>
-      <button type="button" id="lang-toggle" class="link-button"></button>
+      <div class="header-controls">
+        <label for="theme-select" data-i18n="theme.label"></label>
+        <select id="theme-select">
+          <option value="system" data-i18n="theme.system"></option>
+          <option value="light" data-i18n="theme.light"></option>
+          <option value="dark" data-i18n="theme.dark"></option>
+        </select>
+        <button type="button" id="lang-toggle" class="link-button"></button>
+      </div>
     </header>
-
-    <p class="wip" role="note" data-i18n="app.wip"></p>
 
     <main>
       <section class="card" aria-labelledby="howto-heading">
@@ -41,7 +47,17 @@
             <li data-i18n="more.customs"></li>
             <li data-i18n="more.print"></li>
             <li data-i18n="more.privacy"></li>
-            <li data-i18n="more.unknown"></li>
+            <li data-i18n="more.hidden"></li>
+            <li>
+              <span data-i18n="more.unknown"></span>
+              <a
+                href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=new-layout.yml"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><span data-i18n="report.layout"></span
+                ><span class="visually-hidden" data-i18n="link.external"></span
+              ></a>
+            </li>
           </ul>
         </details>
       </section>
@@ -143,6 +159,16 @@
       <section id="output-section" class="card" aria-labelledby="output-heading" hidden>
         <h2 id="output-heading" data-i18n="output.title"></h2>
         <div id="status" class="status" role="status" aria-live="polite"></div>
+        <p id="report-layout" class="hint" hidden>
+          <span data-i18n="report.layoutHint"></span>
+          <a
+            href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=new-layout.yml"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><span data-i18n="report.layout"></span
+            ><span class="visually-hidden" data-i18n="link.external"></span
+          ></a>
+        </p>
         <ul id="label-list" class="label-list"></ul>
         <button
           type="button"
@@ -210,10 +236,17 @@
           <span data-i18n="footer.source"></span>
           <span class="visually-hidden" data-i18n="link.external"></span>
         </a>
+        <a
+          href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=bug-report.yml"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><span data-i18n="report.bug"></span
+          ><span class="visually-hidden" data-i18n="link.external"></span
+        ></a>
         <span data-i18n="footer.license"></span>
         <a href="./third-party-licenses.txt" data-i18n="footer.thirdParty"></a>
-        <a href="./impressum.html" data-i18n="footer.imprint"></a>
-        <a href="./datenschutz.html" data-i18n="footer.privacy"></a>
+        <a href="./impressum.html" data-carry-theme data-i18n="footer.imprint"></a>
+        <a href="./datenschutz.html" data-carry-theme data-i18n="footer.privacy"></a>
       </p>
       <p class="disclaimer" data-i18n="more.disclaimer"></p>
     </footer>

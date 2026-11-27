@@ -9,10 +9,11 @@
     <title>Datenschutz · Parcelschnitt</title>
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/ui/styles.css" />
+    <script type="module" src="/src/ui/legalPage.ts"></script>
   </head>
   <body>
     <header class="site-header">
-      <a class="brand brand-link" href="./">
+      <a class="brand brand-link" href="./" data-carry-theme>
         <img src="/logo.svg" alt="" width="48" height="48" />
         <span class="brand-name">Parcelschnitt</span>
       </a>
@@ -42,6 +43,14 @@
           Servern (keine externen Schriften, Skripte oder Bilder).
         </p>
 
+        <p>
+          Technischer Hinweis: Die erzeugte PDF enthält die Originalseite unsichtbar im Hintergrund;
+          sichtbar und gedruckt wird nur das Etikett. Bei DHL ist das der Beleg mit denselben
+          Angaben wie das Etikett. Steht auf der Seite weiterer Text, etwa eine Rechnung, weist
+          Parcelschnitt dich darauf hin. Die Datei verlässt dein Gerät nur, wenn du sie selbst
+          weitergibst.
+        </p>
+
         <h2>3. Hosting bei GitHub Pages</h2>
         <p>
           Die Website wird über GitHub Pages bereitgestellt, einen Dienst der GitHub, Inc., 88 Colin
@@ -65,10 +74,10 @@
         <h2>4. Lokale Speicherung von Einstellungen</h2>
         <p>
           Nur wenn du „Einstellungen auf diesem Gerät merken“ aktivierst, speichert dein Browser das
-          gewählte Etikettenformat, die automatische Formatwahl und die Zoll-Option im lokalen
-          Speicher (localStorage) deines Geräts. Diese Angaben verlassen dein Gerät nicht.
-          Rechtsgrundlage ist § 25 Abs. 2 Nr. 2 TDDDG, da die Speicherung für die von dir
-          ausdrücklich gewünschte Funktion erforderlich ist. Du kannst die Angaben jederzeit
+          gewählte Etikettenformat, die automatische Formatwahl, die Zoll-Option und die Darstellung
+          (hell/dunkel) im lokalen Speicher (localStorage) deines Geräts. Diese Angaben verlassen
+          dein Gerät nicht. Rechtsgrundlage ist § 25 Abs. 2 Nr. 2 TDDDG, da die Speicherung für die
+          von dir ausdrücklich gewünschte Funktion erforderlich ist. Du kannst die Angaben jederzeit
           löschen, indem du das Häkchen entfernst oder die Website-Daten in deinem Browser löschst.
         </p>
 
@@ -125,6 +134,13 @@
           images).
         </p>
 
+        <p>
+          Technical note: the generated PDF contains the original page invisibly in the background;
+          only the label is visible and printed. For DHL this is the receipt with the same data as
+          the label. If the page holds further text, such as an invoice, Parcelschnitt tells you.
+          The file only leaves your device if you pass it on yourself.
+        </p>
+
         <h2>3. Hosting on GitHub Pages</h2>
         <p>
           The website is served by GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr.
@@ -148,10 +164,11 @@
         <h2>4. Settings stored on your device</h2>
         <p>
           Only if you tick "Remember settings on this device" does your browser store the chosen
-          label size, the automatic size choice and the customs option in local storage on your
-          device. This data never leaves your device. The legal basis is § 25(2) no. 2 TDDDG, as
-          storage is required for the function you explicitly requested. You can delete it at any
-          time by unticking the option or clearing the site data in your browser.
+          label size, the automatic size choice, the customs option and the appearance (light/dark)
+          in local storage on your device. This data never leaves your device. The legal basis is §
+          25(2) no. 2 TDDDG, as storage is required for the function you explicitly requested. You
+          can delete it at any time by unticking the option or clearing the site data in your
+          browser.
         </p>
 
         <h2>5. Links to GitHub</h2>
@@ -184,8 +201,8 @@
 
     <footer class="site-footer">
       <p class="links">
-        <a href="./">Parcelschnitt</a>
-        <a href="./impressum.html">Impressum / Legal notice</a>
+        <a href="./" data-carry-theme>Parcelschnitt</a>
+        <a href="./impressum.html" data-carry-theme>Impressum / Legal notice</a>
       </p>
     </footer>
   </body>

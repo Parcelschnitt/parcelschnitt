@@ -10,10 +10,13 @@ export type Lang = 'de' | 'en';
 
 const de = {
   'app.tagline': 'Versandetiketten passgenau für den Etikettendrucker zuschneiden',
-  'app.wip': 'In Entwicklung, noch nicht für den Alltag gedacht',
   'app.privacy':
     'Alles bleibt auf deinem Gerät: Die PDF wird nur in deinem Browser verarbeitet. Keine Uploads, kein Konto, kein Tracking.',
   'lang.switch': 'English',
+  'theme.label': 'Darstellung',
+  'theme.system': 'Automatisch',
+  'theme.light': 'Hell',
+  'theme.dark': 'Dunkel',
   'lang.switchLabel': 'Switch to English',
 
   'file.drop': 'PDF hierher ziehen oder klicken, um eine Datei auszuwählen',
@@ -33,7 +36,7 @@ const de = {
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
   'settings.remember': 'Einstellungen auf diesem Gerät merken',
   'settings.rememberHint':
-    'Gespeichert werden nur Etikettenformat, automatische Formatwahl und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
+    'Gespeichert werden nur Etikettenformat, automatische Formatwahl, Zoll-Option und Darstellung, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
   'settings.rememberFailed':
     'Dein Browser erlaubt das Speichern nicht (z. B. im privaten Modus). Die Einstellungen gelten nur für diesen Besuch.',
 
@@ -87,6 +90,8 @@ const de = {
   'output.printHint':
     'Beim Drucken „Tatsächliche Größe“ bzw. 100 % wählen, nicht „An Seite anpassen“.',
   'output.previewAlt': 'Vorschau Seite {page}',
+  'output.hiddenText':
+    'Hinweis: Auf der Originalseite steht außerhalb des Etiketts weiterer Text (z. B. eine Rechnung). Er wird nicht gedruckt, ist aber unsichtbar in der Datei enthalten. Zum Drucken ist das unbedenklich, gib die Datei aber nicht weiter.',
 
   'error.fileTooLarge': 'Die Datei ist zu groß (höchstens {mb} MB).',
   'error.emptyFile': 'Die Datei ist leer.',
@@ -118,8 +123,14 @@ const de = {
     'Drucken: Im Druckdialog „Tatsächliche Größe“ bzw. 100 % wählen und im Druckertreiber das passende Etikettenformat einstellen.',
   'more.privacy':
     'Datenschutz: Die PDF wird ausschließlich in deinem Browser verarbeitet. Sie wird nicht hochgeladen, und die Seite lädt keine Inhalte von anderen Servern.',
+  'more.hidden':
+    'Technischer Hinweis: Die erzeugte PDF enthält die Originalseite unsichtbar im Hintergrund, sichtbar und gedruckt wird nur das Etikett. Bei DHL steckt dort der Beleg, der dieselben Angaben wie das Etikett enthält. Steht auf der Seite weiterer Text, etwa eine Rechnung, weist Parcelschnitt dich darauf hin. Gib die Datei in diesem Fall nicht weiter.',
   'more.unknown':
-    'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
+    'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du über ein Formular auf GitHub melden (kostenloses GitHub-Konto nötig), bitte ohne die echte PDF anzuhängen:',
+  'report.layout': 'Neues Etikett melden',
+  'report.layoutHint':
+    'Sollte Parcelschnitt dieses Etikett kennen? Beschreibe es uns über das Formular auf GitHub (kostenloses Konto nötig). Bitte die echte PDF nicht anhängen.',
+  'report.bug': 'Fehler melden',
   'more.disclaimer':
     'Parcelschnitt ist ein unabhängiges Open-Source-Projekt und steht in keiner Verbindung zu DHL oder der Deutschen Post.',
   'support.title': 'Parcelschnitt unterstützen',
@@ -138,10 +149,13 @@ export type MessageKey = keyof typeof de;
 
 const en: Record<MessageKey, string> = {
   'app.tagline': 'Crop shipping labels to the exact size of your label printer',
-  'app.wip': 'Work in progress, not ready for everyday use',
   'app.privacy':
     'Everything stays on your device: the PDF is processed only in your browser. No uploads, no account, no tracking.',
   'lang.switch': 'Deutsch',
+  'theme.label': 'Appearance',
+  'theme.system': 'Automatic',
+  'theme.light': 'Light',
+  'theme.dark': 'Dark',
   'lang.switchLabel': 'Auf Deutsch umschalten',
 
   'file.drop': 'Drop a PDF here or click to choose a file',
@@ -161,7 +175,7 @@ const en: Record<MessageKey, string> = {
   'settings.allowShrink': 'Shrink anyway (not recommended)',
   'settings.remember': 'Remember settings on this device',
   'settings.rememberHint':
-    'Only the label size, the automatic size choice and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
+    'Only the label size, the automatic size choice, the customs option and the appearance are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
   'settings.rememberFailed':
     'Your browser does not allow storing settings (e.g. in private mode). They apply to this visit only.',
 
@@ -214,6 +228,8 @@ const en: Record<MessageKey, string> = {
   'output.open': 'Open for printing',
   'output.printHint': 'When printing, choose "Actual size" or 100 %, not "Fit to page".',
   'output.previewAlt': 'Preview page {page}',
+  'output.hiddenText':
+    'Note: the original page contains further text outside the label (e.g. an invoice). It is not printed but remains invisibly in the file. That is fine for printing, but do not pass the file on.',
 
   'error.fileTooLarge': 'The file is too large (at most {mb} MB).',
   'error.emptyFile': 'The file is empty.',
@@ -245,8 +261,14 @@ const en: Record<MessageKey, string> = {
     'Printing: choose "Actual size" or 100 % in the print dialog and set the matching label size in the printer driver.',
   'more.privacy':
     'Privacy: the PDF is processed only in your browser. It is not uploaded, and the page loads nothing from other servers.',
+  'more.hidden':
+    'Technical note: the generated PDF contains the original page invisibly in the background; only the label is visible and printed. For DHL this is the receipt, which repeats the label data. If the page holds further text, such as an invoice, Parcelschnitt tells you. In that case, do not pass the file on.',
   'more.unknown':
-    'Label not recognised? Then simply select the area yourself. You can report new label types on GitHub, please without attaching the real PDF.',
+    'Label not recognised? Then simply select the area yourself. You can report new label types through a form on GitHub (free GitHub account required), please without attaching the real PDF:',
+  'report.layout': 'Report a new label',
+  'report.layoutHint':
+    'Should Parcelschnitt know this label? Describe it to us through the form on GitHub (free account required). Please do not attach the real PDF.',
+  'report.bug': 'Report a bug',
   'more.disclaimer':
     'Parcelschnitt is an independent open-source project and is not affiliated with DHL or Deutsche Post.',
   'support.title': 'Support Parcelschnitt',

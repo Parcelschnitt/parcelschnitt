@@ -1,21 +1,22 @@
 /* Parcelschnitt UI. System fonts only: no external resources. */
 
 :root {
-  --bg: #f6f7f9;
+  /* Light theme (default): contrast well above WCAG AA, also for secondary text. */
+  --bg: #eceff3;
   --surface: #ffffff;
-  --text: #1b1f24;
-  --muted: #5b6573;
-  --border: #d7dce3;
-  --accent: #0f766e;
+  --text: #0f1216;
+  --muted: #3c4450;
+  --border: #b4bcc7;
+  --accent: #0a6660;
   --accent-text: #ffffff;
-  --focus: #0b5fff;
-  --ok: #1d6b35;
-  --warn-bg: #fff4d6;
-  --warn-text: #6b4b00;
-  --error-bg: #fde8ea;
-  --error-text: #8a0f1f;
+  --focus: #0047d6;
+  --ok: #145a2a;
+  --warn-bg: #ffefb8;
+  --warn-text: #4d3500;
+  --error-bg: #fde2e5;
+  --error-text: #74091a;
   --radius: 10px;
-  color-scheme: light dark;
+  color-scheme: light;
   font-family:
     system-ui,
     -apple-system,
@@ -24,26 +25,49 @@
     'Helvetica Neue',
     Arial,
     sans-serif;
-  line-height: 1.5;
+  font-size: 1.0625rem;
+  line-height: 1.55;
   color: var(--text);
   background: var(--bg);
 }
 
+/*
+ * Dark theme: chosen explicitly (data-theme="dark") or, with the "automatic" setting, when the
+ * system prefers dark. The two blocks must stay identical.
+ */
+:root[data-theme='dark'] {
+  --bg: #12151a;
+  --surface: #1b1f26;
+  --text: #eef1f4;
+  --muted: #b3bcc8;
+  --border: #3d4552;
+  --accent: #4fd1c0;
+  --accent-text: #0b1f1d;
+  --focus: #7aa8ff;
+  --ok: #7ad996;
+  --warn-bg: #3a2f10;
+  --warn-text: #ffdf8a;
+  --error-bg: #3d1419;
+  --error-text: #ffc2ca;
+  color-scheme: dark;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #12151a;
     --surface: #1b1f26;
-    --text: #e8ebef;
-    --muted: #a3acb8;
-    --border: #343b46;
+    --text: #eef1f4;
+    --muted: #b3bcc8;
+    --border: #3d4552;
     --accent: #4fd1c0;
     --accent-text: #0b1f1d;
-    --focus: #6ea0ff;
-    --ok: #6fd18c;
+    --focus: #7aa8ff;
+    --ok: #7ad996;
     --warn-bg: #3a2f10;
-    --warn-text: #ffd977;
+    --warn-text: #ffdf8a;
     --error-bg: #3d1419;
-    --error-text: #ffb3bd;
+    --error-text: #ffc2ca;
+    color-scheme: dark;
   }
 }
 
@@ -86,15 +110,6 @@ h3 {
 .tagline {
   margin: 0;
   color: var(--muted);
-}
-
-.wip {
-  margin: 1rem 0;
-  padding: 0.5rem 0.75rem;
-  border-radius: var(--radius);
-  background: var(--warn-bg);
-  color: var(--warn-text);
-  font-size: 0.9rem;
 }
 
 .card {
@@ -501,4 +516,24 @@ details.more li + li {
 
 .field-hint {
   margin: -0.75rem 0 1rem;
+}
+
+/* ---- header controls ---- */
+
+.header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem 0.75rem;
+}
+
+.header-controls label {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.header-controls select {
+  padding: 0.25rem 0.4rem;
+  font-size: 0.9rem;
 }

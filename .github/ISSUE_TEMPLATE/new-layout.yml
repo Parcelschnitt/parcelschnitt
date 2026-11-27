@@ -1,0 +1,71 @@
+name: Neues Etikett melden / Report a new label layout
+description: Ein Versandetikett wird nicht erkannt oder fehlt noch. / A shipping label is not detected or not supported yet.
+title: 'Neues Etikett / New layout: '
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Bitte niemals die echte PDF anhängen.** Versandetiketten enthalten Namen, Adressen und Sendungsnummern, auch von Dritten. Beschreibe stattdessen den Aufbau. Ein Screenshot ist nur in Ordnung, wenn alle persönlichen Daten, Barcodes und Codes geschwärzt sind.
+
+        **Never attach the real PDF.** Shipping labels contain names, addresses and tracking numbers, including those of third parties. Describe the layout instead. A screenshot is only fine if all personal data, barcodes and codes are blacked out.
+  - type: input
+    id: carrier
+    attributes:
+      label: Versanddienstleister und Produkt / Carrier and product
+      placeholder: z. B. Hermes Päckchen, DPD Classic, GLS, DHL Express, Deutsche Post Warenpost International
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Woher stammt die PDF? / Where does the PDF come from?
+      placeholder: z. B. Online-Frankierung des Anbieters, eBay, Amazon, Shopify, Post-Shop
+    validations:
+      required: true
+  - type: dropdown
+    id: page
+    attributes:
+      label: Seitenformat der PDF / Page size of the PDF
+      options:
+        - A4 Hochformat / portrait
+        - A4 Querformat / landscape
+        - A5
+        - Bereits Etikettenformat / already label size
+        - Anderes / other
+    validations:
+      required: true
+  - type: input
+    id: size
+    attributes:
+      label: Größe des eigentlichen Etiketts in mm (ungefähr) / Size of the label itself in mm (approx.)
+      placeholder: z. B. 100 x 150
+    validations:
+      required: true
+  - type: textarea
+    id: layout
+    attributes:
+      label: Aufbau der Seite / Page layout
+      description: |
+        Wo liegt das Etikett auf der Seite? Ist es gedreht? Gibt es Schnittlinien, Scheren, Passerkreuze oder einen Rahmen? Welche festen Wörter stehen immer darauf (z. B. „Routingcode“, „Sendungsnummer“)? Was steht sonst noch auf der Seite (Beleg, Rechnung, Anleitung)?
+        Where is the label on the page? Is it rotated? Are there cut lines, scissors, crop marks or a frame? Which fixed words always appear on it? What else is on the page (receipt, invoice, instructions)?
+    validations:
+      required: true
+  - type: dropdown
+    id: printer
+    attributes:
+      label: Dein Etikettenformat / Your label size
+      options:
+        - 103 × 199 mm
+        - 100 × 150 mm
+        - 103 × 150 mm
+        - DYMO 99014 (54 × 101 mm)
+        - Brother 62 mm
+        - Anderes / other
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Datenschutz / Privacy
+      options:
+        - label: Ich habe keine echte PDF und keine ungeschwärzten persönlichen Daten angehängt. / I have not attached a real PDF or any personal data that is not blacked out.
+          required: true

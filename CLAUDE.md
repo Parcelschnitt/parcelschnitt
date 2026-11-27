@@ -81,10 +81,24 @@ docs/            user guide, "report a new layout"
 - The production CSP is injected as a meta tag at build time (`vite.config.ts`); CI checks it.
 - Format choice: "choose the size to match the label" (on by default) uses the layout's
   `recommendedProfileId`; a manual change applies to the current file; off = last chosen.
+- Appearance: automatic (follows the system), light or dark via `data-theme` on <html>;
+  `styles.css` keeps the dark variables in two identical blocks (explicit and media query).
+  The light theme keeps secondary text well above WCAG AA contrast.
 - Settings persistence is opt-in ("remember settings", off by default): only profile,
-  auto-format choice and customs option in localStorage, validated on read; unticking deletes
-  them. The shrink
+  auto-format choice, customs option and appearance in localStorage, validated on read;
+  unticking deletes them. Without "remember", the appearance travels between the main and the
+  legal pages as `?theme=` on links marked `data-carry-theme` (nothing stored); the legal
+  pages apply it via `legalPage.ts`. The shrink
   permission is never stored. All text is set via `textContent`.
+
+## Hidden content in outputs (decision 2026-11-27)
+
+- Outputs embed the whole source page clipped to the label; content outside stays invisibly in
+  the file. Removing it would need a hand-written content-stream parser, which is ruled out.
+- Mitigation instead: `src/core/hiddenContent.ts` flags notable text outside the label and the
+  layout's `companionAreas` (e.g. DHL receipt); the UI then warns not to pass the file on.
+  Outputs never carry source metadata, attachments, scripts or annotations (tested).
+- Revisit if a carrier puts unrelated personal data on the label page.
 
 ## Legal pages
 

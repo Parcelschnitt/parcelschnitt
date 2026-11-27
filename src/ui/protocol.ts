@@ -72,6 +72,8 @@ export interface LabelSummary {
   readonly role: LayoutRole;
   readonly target: 'labelPrinter' | 'a4Sheet';
   readonly fit: FitSummary;
+  /** Notable text outside the label on the source page (contained invisibly in the file). */
+  readonly hiddenText: boolean;
 }
 
 export interface ResultResponse {

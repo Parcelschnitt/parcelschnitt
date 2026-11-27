@@ -19,6 +19,7 @@ import {
 } from './protocol.ts';
 import { defaultSelection, fromMm, toMm, turn, type Box } from './selection.ts';
 import { SelectionEditor } from './selectionEditor.ts';
+import { applyTheme, carryThemeInLinks, isTheme, themeFromUrl, type Theme } from './theme.ts';
 import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 import {
   describeLabel,
@@ -36,6 +37,7 @@ function element<T extends HTMLElement>(id: string, type: new () => T): T {
 
 const ui = {
   langToggle: element('lang-toggle', HTMLButtonElement),
+  themeSelect: element('theme-select', HTMLSelectElement),
   dropZone: element('drop-zone', HTMLLabelElement),
   fileInput: element('file-input', HTMLInputElement),
   fileName: element('file-name', HTMLParagraphElement),
@@ -63,6 +65,7 @@ const ui = {
   manualBack: element('manual-back', HTMLButtonElement),
   manualStart: element('manual-start', HTMLButtonElement),
   outputSection: element('output-section', HTMLElement),
+  reportLayout: element('report-layout', HTMLParagraphElement),
   status: element('status', HTMLDivElement),
   labelList: element('label-list', HTMLUListElement),
   labelOutput: element('label-output', HTMLDivElement),
@@ -92,6 +95,8 @@ interface State {
   profileLocked: boolean;
   /** Format the worker chose automatically for the current file, if any. */
   autoChosenProfile: ProfileId | null;
+  /** Automatic detection found nothing in the current file. */
+  nothingDetected: boolean;
   /** Latest crop request (auto or manual); older responses are ignored. */
   requestId: number;
   /** Latest page-rendering request, counted separately from crop requests. */
@@ -109,6 +114,7 @@ const state: State = {
   mode: 'auto',
   profileLocked: false,
   autoChosenProfile: null,
+  nothingDetected: false,
   requestId: 0,
   pagesRequestId: 0,
   pages: null,
@@ -249,6 +255,8 @@ function renderResult(): void {
   clearResults();
   ui.outputSection.hidden = state.file === null && state.lastError === null;
   ui.manualStart.hidden = state.mode === 'manual' || state.lastResult === null;
+  // Offer to report the layout whenever detection found nothing in this file.
+  ui.reportLayout.hidden = !state.nothingDetected || state.lastError !== null;
   if (state.lastError) {
     setStatus(errorMessage(state.lang, state.lastError), true);
     return;
@@ -388,7 +396,10 @@ worker.addEventListener('message', (event: MessageEvent<unknown>) => {
     state.lastResult = response;
     state.lastError = null;
     adoptProfile(response.profileId);
-    if (state.mode === 'auto' && response.labels.length === 0) enterManual();
+    if (state.mode === 'auto' && response.labels.length === 0) {
+      state.nothingDetected = true;
+      enterManual();
+    }
   }
   renderResult();
 });
@@ -551,6 +562,7 @@ async function acceptFile(file: File): Promise<void> {
   state.mode = 'auto';
   state.profileLocked = false;
   state.autoChosenProfile = null;
+  state.nothingDetected = false;
   state.lastResult = null;
   state.lastError = null;
   ui.manualSection.hidden = true;
@@ -610,6 +622,7 @@ function persistSettings(): void {
     profileId: selectedProfileId(),
     customsForms: selectedCustoms(),
     autoProfile: ui.autoProfileCheckbox.checked,
+    theme: selectedTheme(),
   });
   ui.rememberFailed.hidden = saved;
   if (!saved) ui.rememberCheckbox.checked = false;
@@ -621,8 +634,26 @@ function restoreSettings(): void {
   ui.profileSelect.value = saved.profileId;
   ui.customsSelect.value = saved.customsForms;
   ui.autoProfileCheckbox.checked = saved.autoProfile;
+  setTheme(saved.theme);
   ui.rememberCheckbox.checked = true;
 }
+
+function selectedTheme(): Theme {
+  const value = ui.themeSelect.value;
+  return isTheme(value) ? value : 'system';
+}
+
+function setTheme(theme: Theme): void {
+  ui.themeSelect.value = theme;
+  applyTheme(theme);
+  // Pass the choice on to the legal pages through their links, without storing it.
+  carryThemeInLinks(theme);
+}
+
+ui.themeSelect.addEventListener('change', () => {
+  setTheme(selectedTheme());
+  persistSettings();
+});
 
 ui.rememberCheckbox.addEventListener('change', () => {
   if (ui.rememberCheckbox.checked) {
@@ -686,6 +717,8 @@ function browserSupported(): boolean {
 applyStaticTexts();
 renderProfileOptions();
 restoreSettings();
+// A theme passed along from a legal page wins for this visit (nothing is stored).
+setTheme(themeFromUrl(location.search) ?? selectedTheme());
 renderProfileCaution();
 if (!browserSupported()) {
   ui.fileInput.disabled = true;

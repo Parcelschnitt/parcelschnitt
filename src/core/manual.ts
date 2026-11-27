@@ -52,6 +52,7 @@ export function manualDetection(
     // fitToProfile turns content upright by (360 - textAngle); the user picked `rotation`.
     textAngle: normalizeQuarterTurn(360 - selection.rotation),
     excluded: [],
+    companionAreas: [],
     // Unknown carrier: shrinking still warns, but without the DHL-specific notice.
     requiresFullScale: false,
   };

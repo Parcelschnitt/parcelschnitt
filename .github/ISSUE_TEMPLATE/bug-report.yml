@@ -1,0 +1,50 @@
+name: Fehler melden / Report a bug
+description: Etwas funktioniert nicht wie erwartet. / Something does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Bitte keine echten Etiketten oder ungeschwärzten Screenshots anhängen.** / **Please do not attach real labels or screenshots that are not blacked out.**
+
+        Sicherheitslücken bitte vertraulich melden, nicht hier. / Please report vulnerabilities privately, not here.
+  - type: textarea
+    id: what
+    attributes:
+      label: Was ist passiert? / What happened?
+      description: Was hast du erwartet, was ist stattdessen passiert? / What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Nachstellen / Steps to reproduce
+      placeholder: |
+        1. PDF von … (Anbieter) gewählt
+        2. Format … gewählt
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: label
+    attributes:
+      label: Art des Etiketts / Label type
+      placeholder: z. B. DHL-Paketmarke international mit CN22, Internetmarke Warenpost
+  - type: input
+    id: browser
+    attributes:
+      label: Browser und Betriebssystem / Browser and operating system
+      placeholder: z. B. Firefox 150 auf Windows 11, Safari auf macOS
+    validations:
+      required: true
+  - type: input
+    id: printer
+    attributes:
+      label: Drucker und Etikettenformat (falls relevant) / Printer and label size (if relevant)
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Datenschutz / Privacy
+      options:
+        - label: Ich habe keine echte PDF und keine ungeschwärzten persönlichen Daten angehängt. / I have not attached a real PDF or any personal data that is not blacked out.
+          required: true

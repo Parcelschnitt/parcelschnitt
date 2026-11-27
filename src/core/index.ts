@@ -9,15 +9,18 @@ import type { Detection } from './detection.ts';
 import { fitToProfile, type FitResult } from './fit.ts';
 import { height, width } from './geometry.ts';
 import type { PdfJsLib } from './pdfjs.ts';
+import type { PageAnalysis } from './types.ts';
 import { LAYOUTS } from '../layouts/index.ts';
 import { A4_SHEET, getProfile, type PrinterProfile } from '../profiles/index.ts';
 import { manualDetection, type ManualSelection } from './manual.ts';
+import { hasNotableHiddenText } from './hiddenContent.ts';
 
 export { analyzeDocument } from './analyze.ts';
 export { detectLabels } from './detect.ts';
 export { fitToProfile } from './fit.ts';
 export { renderLabels } from './crop.ts';
 export { LIMITS } from './limits.ts';
+export { HIDDEN_TEXT_THRESHOLD_CHARS } from './hiddenContent.ts';
 export { MANUAL_LAYOUT_ID, MIN_SELECTION_PT, type ManualSelection } from './manual.ts';
 export { ParcelschnittError, type ParcelschnittErrorCode } from './errors.ts';
 export type { Detection } from './detection.ts';
@@ -51,6 +54,20 @@ export interface LabelOutcome {
   /** Where this item was placed: the label profile or the A4 sheet. */
   readonly target: 'labelPrinter' | 'a4Sheet';
   readonly fit: FitResult;
+  /**
+   * The source page holds notable text outside the label that the layout does not explain
+   * (e.g. an invoice). It is invisible in the output but contained in the file.
+   */
+  readonly hiddenText: boolean;
+}
+
+function hiddenTextOn(
+  pages: readonly PageAnalysis[],
+  detection: Detection,
+  items: readonly Detection[],
+): boolean {
+  const page = pages[detection.pageIndex];
+  return page ? hasNotableHiddenText(page, items) : false;
 }
 
 export interface CropResult {
@@ -116,13 +133,20 @@ export async function cropLabels(
     const isCustoms = detection.role === 'customsForm';
     if (isCustoms && customsForms === 'omit') continue;
     // Customs forms on A4 are never shrunk; they always fit.
+    const hiddenText = hiddenTextOn(pages, detection, detections);
     labels.push(
       isCustoms && customsForms === 'separateA4'
-        ? { detection, target: 'a4Sheet', fit: fitDetection(detection, A4_SHEET, false) }
+        ? {
+            detection,
+            target: 'a4Sheet',
+            fit: fitDetection(detection, A4_SHEET, false),
+            hiddenText,
+          }
         : {
             detection,
             target: 'labelPrinter',
             fit: fitDetection(detection, profile, allowShrink),
+            hiddenText,
           },
     );
   }
@@ -162,6 +186,7 @@ export async function cropManual(
       detection,
       target: 'labelPrinter',
       fit: fitDetection(detection, options.profile, options.allowShrink ?? false),
+      hiddenText: hiddenTextOn(pages, detection, [detection]),
     },
   ];
   return {

@@ -52,6 +52,8 @@ describe.skipIf(!SAMPLES_DIR)('real samples ($PARCELSCHNITT_SAMPLES)', () => {
 
       for (const [i, label] of result.labels.entries()) {
         expect(label.fit.ok).toBe(true);
+        // Real labels only carry the known receipt/instructions next to the label.
+        expect(label.hiddenText).toBe(false);
         if (!label.fit.ok) continue;
         const page = doc.getPage(i);
         const analysis = output[i];
