@@ -64,6 +64,7 @@ const ERROR_CODES: readonly ErrorCode[] = [
   'tooManyPages',
   'unreadablePdf',
   'pageOutOfRange',
+  'invalidSelection',
   'internal',
 ];
 

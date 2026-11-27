@@ -70,6 +70,8 @@ const de = {
   'error.tooManyPages': 'Die PDF hat zu viele Seiten (höchstens {pages}).',
   'error.unreadablePdf': 'Die PDF konnte nicht gelesen werden.',
   'error.pageOutOfRange': 'Die PDF konnte nicht verarbeitet werden.',
+  'error.invalidSelection':
+    'Der gewählte Bereich ist zu klein oder liegt außerhalb der Seite (mindestens 10 × 10 mm).',
   'error.internal': 'Unerwarteter Fehler. Bitte versuche es erneut.',
   'error.unsupportedBrowser':
     'Dein Browser wird nicht unterstützt. Bitte verwende eine aktuelle Version von Firefox, Chrome, Edge oder Safari.',
@@ -171,6 +173,8 @@ const en: Record<MessageKey, string> = {
   'error.tooManyPages': 'The PDF has too many pages (at most {pages}).',
   'error.unreadablePdf': 'The PDF could not be read.',
   'error.pageOutOfRange': 'The PDF could not be processed.',
+  'error.invalidSelection':
+    'The selected area is too small or outside the page (at least 10 × 10 mm).',
   'error.internal': 'Unexpected error. Please try again.',
   'error.unsupportedBrowser':
     'Your browser is not supported. Please use a current version of Firefox, Chrome, Edge or Safari.',

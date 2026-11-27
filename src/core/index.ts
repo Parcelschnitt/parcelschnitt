@@ -10,12 +10,14 @@ import { fitToProfile, type FitResult } from './fit.ts';
 import { height, width } from './geometry.ts';
 import type { PdfJsLib } from './pdfjs.ts';
 import { A4_SHEET, type PrinterProfile } from '../profiles/index.ts';
+import { manualDetection, type ManualSelection } from './manual.ts';
 
 export { analyzeDocument } from './analyze.ts';
 export { detectLabels } from './detect.ts';
 export { fitToProfile } from './fit.ts';
 export { renderLabels } from './crop.ts';
 export { LIMITS } from './limits.ts';
+export { MANUAL_LAYOUT_ID, MIN_SELECTION_PT, type ManualSelection } from './manual.ts';
 export { ParcelschnittError, type ParcelschnittErrorCode } from './errors.ts';
 export type { Detection } from './detection.ts';
 export type { FitResult, FitWarning, Placement } from './fit.ts';
@@ -121,4 +123,28 @@ export async function cropLabels(
       labels.filter((l) => l.target === 'a4Sheet'),
     ),
   };
+}
+
+export interface ManualCropOptions {
+  readonly profile: PrinterProfile;
+  readonly allowShrink?: boolean;
+}
+
+/** Crops a user-selected area to the printer profile (no detection involved). */
+export async function cropManual(
+  bytes: Uint8Array,
+  pdfjs: PdfJsLib,
+  selection: ManualSelection,
+  options: ManualCropOptions,
+): Promise<CropResult> {
+  const pages = await analyzeDocument(bytes, pdfjs);
+  const detection = manualDetection(pages, selection);
+  const labels: LabelOutcome[] = [
+    {
+      detection,
+      target: 'labelPrinter',
+      fit: fitDetection(detection, options.profile, options.allowShrink ?? false),
+    },
+  ];
+  return { labels, pdf: await renderFitting(bytes, pages, labels), a4Pdf: null };
 }

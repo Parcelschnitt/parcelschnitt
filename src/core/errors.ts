@@ -3,7 +3,13 @@
  * label content, because labels hold personal data.
  */
 export type ParcelschnittErrorCode =
-  'fileTooLarge' | 'emptyFile' | 'notAPdf' | 'tooManyPages' | 'unreadablePdf' | 'pageOutOfRange';
+  | 'fileTooLarge'
+  | 'emptyFile'
+  | 'notAPdf'
+  | 'tooManyPages'
+  | 'unreadablePdf'
+  | 'pageOutOfRange'
+  | 'invalidSelection';
 
 export class ParcelschnittError extends Error {
   readonly code: ParcelschnittErrorCode;
