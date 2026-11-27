@@ -15,6 +15,7 @@ const REPO_ROOT = join(import.meta.dirname, '..');
 export const DEFAULT_PROFILE: Readonly<Record<string, ProfileId>> = {
   'dhl-paketmarke': 'label-103x199',
   internetmarke: 'dymo-99014',
+  'customs-cn22': 'label-103x199',
 };
 
 export async function isInsideRepo(path: string): Promise<boolean> {

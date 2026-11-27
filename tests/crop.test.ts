@@ -162,3 +162,42 @@ describe('no label', () => {
     expect(page.elements.length).toBeGreaterThan(0);
   });
 });
+
+describe('international DHL label with CN22 → 103 x 199 mm', () => {
+  it('produces two pages at 100 %: CN22 upright, then the label upright', async () => {
+    const bytes = await fixture('dhl-international-cn22.pdf');
+    const result = await cropLabels(bytes, pdfjs, { profile: getProfile('label-103x199') });
+    if (!result.pdf) throw new Error('no output');
+    const output = await analyze(result.pdf);
+    expect(output).toHaveLength(2);
+    for (const label of result.labels) expect(label.fit.ok && label.fit.placement.scale).toBe(1);
+
+    const [cn22Page, labelPage] = output;
+    expect(dominantTextAngle(cn22Page?.elements ?? [])).toBe(0);
+    expect(dominantTextAngle(labelPage?.elements ?? [])).toBe(0);
+    const cn22Box = visibleBox(cn22Page?.elements ?? []);
+    expect(ptToMm(width(cn22Box))).toBeCloseTo(79.3, 0);
+    expect(ptToMm(height(cn22Box))).toBeCloseTo(110.3, 0);
+    const labelBox = visibleBox(labelPage?.elements ?? []);
+    expect(ptToMm(height(labelBox))).toBeCloseTo(197, 0);
+  });
+
+  it('leaves instructions, cut line and scissors of the CN22 page out', async () => {
+    const bytes = await fixture('dhl-international-cn22.pdf');
+    const result = await cropLabels(bytes, pdfjs, { profile: getProfile('label-103x199') });
+    if (!result.pdf) throw new Error('no output');
+    const [cn22Page] = await analyze(result.pdf);
+    const visible = texts(cn22Page?.elements ?? []).join(' ');
+    expect(visible).toContain('CN22');
+    expect(visible).not.toContain('ausschneiden');
+  });
+
+  it('fits the CN22 1:1 on 100 x 150 mm', async () => {
+    const result = await cropLabels(await fixture('dhl-international-cn22.pdf'), pdfjs, {
+      profile: getProfile('label-100x150'),
+    });
+    const [cn22, label] = result.labels;
+    expect(cn22?.fit.ok && cn22.fit.placement.scale).toBe(1);
+    expect(label?.fit).toMatchObject({ ok: false, reason: 'doesNotFit' });
+  });
+});

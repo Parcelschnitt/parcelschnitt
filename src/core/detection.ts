@@ -31,6 +31,18 @@ export function sizeDeviationMm(box: Rect, expected: ExpectedSizeMm): number | n
   return deviation <= expected.tolerance ? deviation : null;
 }
 
+/** Confidence for the best-matching size variant, or null when none matches. */
+export function sizeConfidence(box: Rect, variants: readonly ExpectedSizeMm[]): number | null {
+  let best: number | null = null;
+  for (const expected of variants) {
+    const deviation = sizeDeviationMm(box, expected);
+    if (deviation === null) continue;
+    const confidence = confidenceFromDeviation(deviation, expected.tolerance);
+    if (best === null || confidence > best) best = confidence;
+  }
+  return best;
+}
+
 export function confidenceFromDeviation(deviation: number, tolerance: number): number {
   return Math.max(0, Math.min(1, 1 - (0.5 * deviation) / tolerance));
 }

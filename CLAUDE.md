@@ -55,6 +55,12 @@ docs/            user guide, "report a new layout"
   ~90 x 47 mm area at the top left of the page. The crosses must NOT appear in the output:
   centre on the content between them, not on the crosses. Target e.g. DYMO 99014
   (54 x 101 mm), 1:1.
+- International DHL labels (e.g. "Päckchen XS - Welt", 2026-11-27 samples) use the same
+  layout but are about 197 x 100 mm; still fits the 199 x 103 mm window at 100 %.
+- International DHL PDFs have two pages: page 1 is the customs declaration CN22, page 2 the
+  label. CN22: upright form with a yellow border of four lines, about 79.3 x 110.3 mm, marker
+  text "CN22" inside; instructions, an interrupted cut line and scissors lie below it and are
+  excluded. The border is part of the output. Fits 103 x 199, 100 x 150 and 103 x 150 at 1:1.
 - Rotating while clipping in one step produced offsets in the prototype; crop first, then
   rotate (or set page /Rotate).
 

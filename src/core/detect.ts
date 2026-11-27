@@ -2,6 +2,7 @@ import { LAYOUTS, type LayoutDescription } from '../layouts/index.ts';
 import type { Detection } from './detection.ts';
 import { detectCropMarkLabels } from './detectors/cropMarks.ts';
 import { detectCutLineLabel } from './detectors/cutLine.ts';
+import { detectFramedForm } from './detectors/framedForm.ts';
 import type { PageAnalysis } from './types.ts';
 
 function detectWithLayout(page: PageAnalysis, layout: LayoutDescription): Detection[] {
@@ -10,6 +11,8 @@ function detectWithLayout(page: PageAnalysis, layout: LayoutDescription): Detect
       return detectCutLineLabel(page, layout);
     case 'cropMarks':
       return detectCropMarkLabels(page, layout);
+    case 'framedForm':
+      return detectFramedForm(page, layout);
   }
 }
 

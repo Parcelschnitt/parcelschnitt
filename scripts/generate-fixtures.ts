@@ -18,6 +18,7 @@ import {
   StandardFonts,
   degrees,
   rgb,
+  type Color,
   type PDFFont,
   type PDFPage,
 } from '@cantoo/pdf-lib';
@@ -26,6 +27,8 @@ const PT_PER_MM = 72 / 25.4;
 const mm = (value: number): number => value * PT_PER_MM;
 const A4 = { width: 595.28, height: 841.89 } as const;
 const BLACK = rgb(0, 0, 0);
+/** Signal yellow used for the frame of customs forms. */
+const YELLOW = rgb(0.98, 0.84, 0.29);
 
 /** Small deterministic PRNG (mulberry32) for placeholder barcodes. */
 function prng(seed: number): () => number {
@@ -109,9 +112,9 @@ class Canvas {
   }
 
   /** Filled or outlined rectangle; (u, v) is its top-left corner in local coordinates. */
-  rect(u: number, v: number, w: number, h: number, filled = true): void {
+  rect(u: number, v: number, w: number, h: number, filled = true, color: Color = BLACK): void {
     const bottomLeft = this.turned ? this.point(u, v) : this.point(u, v + h);
-    const options = filled ? { color: BLACK } : { borderColor: BLACK, borderWidth: 0.75 };
+    const options = filled ? { color } : { borderColor: color, borderWidth: 0.75 };
     this.page.drawRectangle({
       ...bottomLeft,
       width: this.turned ? h : w,
@@ -120,12 +123,19 @@ class Canvas {
     });
   }
 
-  line(u1: number, v1: number, u2: number, v2: number, thickness = 0.75): void {
+  line(
+    u1: number,
+    v1: number,
+    u2: number,
+    v2: number,
+    thickness = 0.75,
+    color: Color = BLACK,
+  ): void {
     this.page.drawLine({
       start: this.point(u1, v1),
       end: this.point(u2, v2),
       thickness,
-      color: BLACK,
+      color,
     });
   }
 
@@ -192,30 +202,52 @@ function scissors(page: PDFPage, centerX: number, bottomY: number): void {
   });
 }
 
+interface DhlVariant {
+  /** Upright label length in mm (national 189, international 197). */
+  readonly lengthMm: number;
+  readonly product: string;
+  readonly recipient: readonly string[];
+  readonly trackingNumber: string;
+}
+
+const DHL_NATIONAL: DhlVariant = {
+  lengthMm: 189,
+  product: '2 kg Paket',
+  recipient: RECIPIENT,
+  trackingNumber: '00.000.000000 0',
+};
+
+const DHL_INTERNATIONAL: DhlVariant = {
+  lengthMm: 197,
+  product: 'Päckchen XS - Welt',
+  recipient: ['Jean Exemple', "1 Rue de l'Exemple", '75000 Paris', 'Frankreich'],
+  trackingNumber: 'XX 000 000 000 DE',
+};
+
 /**
- * DHL Paketmarke: label of 100 x 189 mm lying turned 90° in the top half of an A4 page,
- * full-width cut line at 421 pt from the top, scissors just above both ends, receipt below.
+ * DHL Paketmarke: label of 100 mm x `lengthMm` lying turned 90° in the top half of an A4
+ * page, full-width cut line at 421 pt from the top, scissors just above both ends, receipt
+ * below.
  */
-async function dhlPaketmarke(): Promise<Uint8Array> {
-  const { doc, page, fonts } = await newDocument();
+function drawDhlPage(page: PDFPage, fonts: Fonts, variant: DhlVariant): void {
   const labelW = mm(100); // upright width
-  const labelH = mm(189); // upright height
+  const labelH = mm(variant.lengthMm); // upright height
   const cutY = 421;
   const originX = (A4.width - labelH) / 2;
   const originY = cutY - 36 - labelW;
   const label = new Canvas(page, fonts, originX, originY, labelW, true);
 
   label.rect(labelW - 70, 0, 70, 18, false); // carrier logo placeholder
-  label.text('2 kg Paket', 8, 22, 15, true);
+  label.text(variant.product, 8, 22, 15, true);
   label.text('DHL Online Frankierung', 8, 31, 6);
   label.text('Von:', 8, 42, 6, true);
   label.lines(SENDER, 24, 42, 7);
   label.text('Sicherheitscode', labelW - 72, 30, 5);
   label.matrix(labelW - 72, 34, 66, 22, 101);
   label.text('An:', 8, 120, 7, true);
-  label.lines(RECIPIENT, 24, 120, 12);
+  label.lines(variant.recipient, 24, 120, 12);
   label.line(0, 196, labelW, 196);
-  label.text('Sendungsnummer: 00.000.000000 0', 8, 210, 7, true);
+  label.text(`Sendungsnummer: ${variant.trackingNumber}`, 8, 210, 7, true);
   label.text('max. 60 x 30 x 15 cm', 8, 219, 7, true);
   label.text('PAK-ID: PAK 000 000 000', 8, 228, 6);
   label.lines(['Entgelt Bezahlt', 'Postage Paid'], labelW - 62, 210, 7);
@@ -226,7 +258,7 @@ async function dhlPaketmarke(): Promise<Uint8Array> {
   label.rect(0, 366, labelW, 4);
   label.text('Identcode', 8, 380, 6);
   label.barcode(24, 386, labelW - 48, 70, 303);
-  label.text('00.000.000000 0', 106, 468, 7);
+  label.text(variant.trackingNumber, 106, 468, 7);
   label.rect(0, labelH - 10, labelW, 10);
 
   // Cut line across the page, scissors at both ends just above it.
@@ -244,9 +276,13 @@ async function dhlPaketmarke(): Promise<Uint8Array> {
   receipt.text('Sendungsinformation - für Ihre Unterlagen.', 10, 20, 11, true);
   receipt.lines(['Absender:', '', '', '', 'Empfänger:'], 10, 50, 8);
   receipt.lines(SENDER, 90, 50, 8);
-  receipt.lines(RECIPIENT, 90, 100, 8);
+  receipt.lines(variant.recipient, 90, 100, 8);
   receipt.lines(
-    ['Sendungsnr.: 00.000.000000 0', 'Produkt: 2 kg Paket', 'Erstelldatum: 01.01.2026'],
+    [
+      `Sendungsnr.: ${variant.trackingNumber}`,
+      `Produkt: ${variant.product}`,
+      'Erstelldatum: 01.01.2026',
+    ],
     10,
     160,
     8,
@@ -254,7 +290,82 @@ async function dhlPaketmarke(): Promise<Uint8Array> {
   receipt.text('Sicherheitscode', 250, 20, 7);
   receipt.matrix(250, 26, 90, 26, 404);
   receipt.text('Bitte drucken Sie die Versandmarke in der Originalgröße aus.', 10, 240, 7, true);
+}
 
+async function dhlPaketmarke(): Promise<Uint8Array> {
+  const { doc, page, fonts } = await newDocument();
+  drawDhlPage(page, fonts, DHL_NATIONAL);
+  return doc.save({ useObjectStreams: false });
+}
+
+/**
+ * Customs declaration CN22: upright form of 79.3 x 110.3 mm with a yellow frame, followed
+ * by instructions and a cut line that is interrupted by text, scissors at both ends.
+ */
+function drawCn22Page(page: PDFPage, fonts: Fonts): void {
+  const w = mm(79.3);
+  const h = mm(110.3);
+  const form = new Canvas(page, fonts, mm(65.4), mm(19.1), w, false);
+  const edge = (u1: number, v1: number, u2: number, v2: number): void => {
+    form.line(u1, v1, u2, v2, 0.75, YELLOW);
+  };
+
+  form.rect(0, 0, w, mm(7.5), true, YELLOW);
+  form.text('Customs Declaration CN22', 6, 14, 8, true);
+  form.text('Deutsche Post', w - 62, 14, 7, true);
+  form.text('Automatisiert zu erstellen. Bitte vor Versand außen am Päckchen anbringen.', 6, 25, 5);
+  edge(0, mm(10.5), w, mm(10.5));
+  form.text('Identcode:', 6, 40, 8);
+  form.text('XX 000 000 000 DE', 90, 40, 8);
+  edge(0, mm(15), w, mm(15));
+  form.text('Category of item:', 6, 56, 8);
+  form.text('Sale of goods', 90, 56, 8);
+  edge(0, mm(20.5), w, mm(20.5));
+  form.text('Description of Content', 6, 66, 5);
+  form.text('Quantity', 110, 66, 5);
+  form.text('Value', 160, 66, 5);
+  for (const row of [24, 28, 32, 36, 40, 44]) edge(0, mm(row), w, mm(row));
+  form.text('Musterartikel', 6, mm(27), 5, true);
+  form.text('1', 118, mm(27), 5, true);
+  form.text('1 EUR', 160, mm(27), 5, true);
+  for (const col of [105, 150, 190]) edge(col, mm(20.5), col, mm(44));
+  edge(0, mm(80), w, mm(80));
+  form.text('Ich bestätige, dass die angegebenen Daten korrekt sind.', 6, mm(84), 5);
+  edge(0, mm(96), w, mm(96));
+  form.text(
+    'Datum und Unterschrift des Versenders / Date and signature of sender',
+    6,
+    mm(100),
+    5,
+    true,
+  );
+  // Frame last, as in the real form.
+  edge(0, 0, w, 0);
+  edge(0, h, w, h);
+  edge(0, 0, 0, h);
+  edge(w, 0, w, h);
+
+  // Outside the form: instructions, interrupted cut line, scissors.
+  const below = new Canvas(page, fonts, 0, 0, A4.width, false);
+  below.text(
+    'Bitte ausschneiden, unterschreiben und auf Ihr Päckchen kleben.',
+    mm(65.4),
+    mm(137),
+    7,
+  );
+  const cutY = mm(148);
+  below.line(20, cutY, 60, cutY, 0.5);
+  below.text('Bitte die Zollinhaltserklärung ausschneiden und aufkleben.', 70, cutY + 3, 9);
+  below.line(A4.width - 60, cutY, A4.width - 20, cutY, 0.5);
+  scissors(page, 18, cutY - 2);
+  scissors(page, A4.width - 24, cutY - 2);
+}
+
+/** International shipment: page 1 customs declaration CN22, page 2 the longer DHL label. */
+async function dhlInternationalWithCn22(): Promise<Uint8Array> {
+  const { doc, page, fonts } = await newDocument();
+  drawCn22Page(page, fonts);
+  drawDhlPage(doc.addPage([A4.width, A4.height]), fonts, DHL_INTERNATIONAL);
   return doc.save({ useObjectStreams: false });
 }
 
@@ -318,6 +429,7 @@ async function main(): Promise<void> {
   await mkdir(outputDir, { recursive: true });
   const fixtures: Record<string, () => Promise<Uint8Array>> = {
     'dhl-paketmarke.pdf': dhlPaketmarke,
+    'dhl-international-cn22.pdf': dhlInternationalWithCn22,
     'internetmarke.pdf': internetmarke,
     'unrelated.pdf': unrelated,
   };

@@ -27,7 +27,8 @@ export interface CutLineLayout {
   readonly helperBandPt: number;
   /** Only graphics up to this size count as helpers (scissors icons). */
   readonly maxHelperSizePt: number;
-  readonly expectedSizeMm: ExpectedSizeMm;
+  /** Known variants of the label size (e.g. national and international). */
+  readonly expectedSizesMm: readonly ExpectedSizeMm[];
   /** Carrier requires printing at 100 %. */
   readonly requiresFullScale: boolean;
 }
@@ -49,4 +50,21 @@ export interface CropMarkLayout {
   readonly requiresFullScale: boolean;
 }
 
-export type LayoutDescription = CutLineLayout | CropMarkLayout;
+/**
+ * A form with a printed rectangular border (e.g. customs declaration CN22). The border is
+ * part of the output; everything outside it (cut lines, instructions) is not.
+ */
+export interface FramedFormLayout {
+  readonly kind: 'framedForm';
+  readonly id: string;
+  readonly carrier: string;
+  /**
+   * All of these must appear inside the frame. Matching ignores case and whitespace,
+   * so "CN22" also matches "CN 22".
+   */
+  readonly markers: readonly string[];
+  readonly expectedFrameMm: ExpectedSizeMm;
+  readonly requiresFullScale: boolean;
+}
+
+export type LayoutDescription = CutLineLayout | CropMarkLayout | FramedFormLayout;

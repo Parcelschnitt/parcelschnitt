@@ -18,8 +18,9 @@ Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner 
 
 ### Geplante Funktionen
 
-- Automatische Erkennung von DHL-Paketmarke (eBay, DHL Online-Frankierung, Post-Shop) und
-  Internetmarke anhand des Inhalts, nicht anhand fester Koordinaten
+- Automatische Erkennung von DHL-Paketmarke (eBay, DHL Online-Frankierung, Post-Shop,
+  national und international), Zollinhaltserklärung CN22 und Internetmarke anhand des
+  Inhalts, nicht anhand fester Koordinaten
 - Zuschnitt in Originalgröße (100 %); Barcodes bleiben Vektoren und werden nicht gerastert
 - Profile: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
 - Warnung, wenn ein Etikett nicht 1:1 auf das gewählte Format passt; nie stilles Verkleinern
@@ -60,8 +61,9 @@ tracking. Your labels never leave your computer.
 
 ### Planned features
 
-- Automatic detection of DHL Paketmarke (eBay, DHL Online-Frankierung, Post-Shop) and
-  Internetmarke based on content, not fixed coordinates
+- Automatic detection of DHL Paketmarke (eBay, DHL Online-Frankierung, Post-Shop, national
+  and international), customs declaration CN22 and Internetmarke based on content, not
+  fixed coordinates
 - Cropping at 100 % scale; barcodes stay vectors and are never rasterised
 - Profiles: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
 - A warning when a label does not fit the chosen size 1:1; never silent shrinking

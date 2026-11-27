@@ -4,13 +4,7 @@
  */
 import { center, height, intersect, union, width, type Rect } from '../geometry.ts';
 import { extractLines, lineLength, lineRect, type Line } from '../lines.ts';
-import {
-  confidenceFromDeviation,
-  dominantTextAngle,
-  isText,
-  sizeDeviationMm,
-  type Detection,
-} from '../detection.ts';
+import { dominantTextAngle, isText, sizeConfidence, type Detection } from '../detection.ts';
 import type { CutLineLayout } from '../../layouts/types.ts';
 import type { PageAnalysis, PageElement } from '../types.ts';
 
@@ -116,14 +110,14 @@ export function detectCutLineLabel(page: PageAnalysis, layout: CutLineLayout): D
   const content = union(members.map((m) => m.bbox));
   const contentBox = content ? intersect(content, region) : null;
   if (!contentBox) return [];
-  const deviation = sizeDeviationMm(contentBox, layout.expectedSizeMm);
-  if (deviation === null) return [];
+  const confidence = sizeConfidence(contentBox, layout.expectedSizesMm);
+  if (confidence === null) return [];
 
   return [
     {
       layoutId: layout.id,
       pageIndex: page.pageIndex,
-      confidence: confidenceFromDeviation(deviation, layout.expectedSizeMm.tolerance),
+      confidence,
       contentBox,
       textAngle: dominantTextAngle(members),
       excluded,

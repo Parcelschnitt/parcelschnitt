@@ -86,3 +86,38 @@ describe('no confident match', () => {
     expect(detectLabels(await analyze(await doc.save()))).toEqual([]);
   });
 });
+
+describe('international DHL label with customs declaration CN22', () => {
+  it('finds the CN22 form on page 1 and the longer DHL label on page 2', async () => {
+    const detections = detectLabels(await analyze(await fixture('dhl-international-cn22.pdf')));
+    expect(detections.map((d) => [d.pageIndex, d.layoutId])).toEqual([
+      [0, 'customs-cn22'],
+      [1, 'dhl-paketmarke'],
+    ]);
+    for (const d of detections) expect(d.confidence).toBeGreaterThan(0.8);
+  });
+
+  it('measures the CN22 including its frame (79.3 x 110.3 mm), upright', async () => {
+    const [cn22] = detectLabels(await analyze(await fixture('dhl-international-cn22.pdf')));
+    if (!cn22) throw new Error('not detected');
+    const { w, h } = sizeMm(cn22.contentBox);
+    expect(w).toBeCloseTo(79.3, 0);
+    expect(h).toBeCloseTo(110.3, 0);
+    expect(cn22.textAngle).toBe(0);
+    expect(cn22.requiresFullScale).toBe(false);
+  });
+
+  it('measures the international label at about 197 x 100 mm', async () => {
+    const [, label] = detectLabels(await analyze(await fixture('dhl-international-cn22.pdf')));
+    if (!label) throw new Error('not detected');
+    const { w, h } = sizeMm(label.contentBox);
+    expect(w).toBeCloseTo(197, 0);
+    expect(h).toBeCloseTo(100, 0);
+  });
+
+  it('does not take a CN22 marker outside any frame for a form', async () => {
+    const doc = await PDFDocument.create();
+    doc.addPage().drawText('Customs Declaration CN22', { x: 50, y: 700 });
+    expect(detectLabels(await analyze(await doc.save()))).toEqual([]);
+  });
+});
