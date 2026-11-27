@@ -62,6 +62,19 @@ export const PROFILES = [
   },
 ] as const satisfies readonly PrinterProfile[];
 
+/**
+ * Plain A4 sheet for an office printer, used for customs forms that are printed separately
+ * from the labels. Not a label-printer profile, so not part of PROFILES.
+ */
+export const A4_SHEET: PrinterProfile = {
+  id: 'a4-sheet',
+  name: 'A4',
+  widthMm: 210,
+  heightMm: 297,
+  marginMm: 10,
+  cautions: [],
+};
+
 export type ProfileId = (typeof PROFILES)[number]['id'];
 
 export function getProfile(id: ProfileId): PrinterProfile {

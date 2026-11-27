@@ -1,10 +1,11 @@
 import { height, ptToMm, width, type QuarterTurn, type Rect } from './geometry.ts';
-import type { ExpectedSizeMm } from '../layouts/types.ts';
+import type { ExpectedSizeMm, LayoutRole } from '../layouts/types.ts';
 import type { PageElement, TextElement } from './types.ts';
 
 /** A label found on a page. */
 export interface Detection {
   readonly layoutId: string;
+  readonly role: LayoutRole;
   readonly pageIndex: number;
   /** 0..1; detectors only report matches they are confident about. */
   readonly confidence: number;

@@ -116,6 +116,7 @@ export function detectCutLineLabel(page: PageAnalysis, layout: CutLineLayout): D
   return [
     {
       layoutId: layout.id,
+      role: layout.role,
       pageIndex: page.pageIndex,
       confidence,
       contentBox,

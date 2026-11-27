@@ -9,6 +9,7 @@ export type {
   ExpectedSizeMm,
   FramedFormLayout,
   LayoutDescription,
+  LayoutRole,
 } from './types.ts';
 export { customsCn22, dhlPaketmarke, internetmarke };
 

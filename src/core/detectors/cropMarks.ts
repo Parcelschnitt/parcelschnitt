@@ -124,6 +124,7 @@ export function detectCropMarkLabels(page: PageAnalysis, layout: CropMarkLayout)
 
     detections.push({
       layoutId: layout.id,
+      role: layout.role,
       pageIndex: page.pageIndex,
       confidence: confidenceFromDeviation(frame.deviation, layout.expectedFrameMm.tolerance),
       contentBox,

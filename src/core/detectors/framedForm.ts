@@ -78,6 +78,7 @@ export function detectFramedForm(page: PageAnalysis, layout: FramedFormLayout): 
   return [
     {
       layoutId: layout.id,
+      role: layout.role,
       pageIndex: page.pageIndex,
       confidence: confidenceFromDeviation(frame.deviation, layout.expectedFrameMm.tolerance),
       contentBox,

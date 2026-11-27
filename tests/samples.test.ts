@@ -38,7 +38,8 @@ describe.skipIf(!SAMPLES_DIR)('real samples ($PARCELSCHNITT_SAMPLES)', () => {
 
     it('crops to the default profile at 100 %, upright, without helpers', async () => {
       const source = await analyze(sample.bytes);
-      const [first] = detectLabels(source);
+      const detections = detectLabels(source);
+      const first = detections.find((d) => d.role === 'shippingLabel') ?? detections[0];
       if (!first) throw new Error('not detected');
       const profile = getProfile(DEFAULT_PROFILE[first.layoutId] ?? 'label-103x199');
       const result = await cropLabels(sample.bytes, pdfjs, { profile });

@@ -61,6 +61,10 @@ docs/            user guide, "report a new layout"
   label. CN22: upright form with a yellow border of four lines, about 79.3 x 110.3 mm, marker
   text "CN22" inside; instructions, an interrupted cut line and scissors lie below it and are
   excluded. The border is part of the output. Fits 103 x 199, 100 x 150 and 103 x 150 at 1:1.
+- Users do not change rolls between label and customs form. Customs forms therefore either
+  go on the same label profile (default), onto a separate A4 sheet for an office printer
+  (own PDF), or are omitted. The label profile is chosen by the shipping label, not by the
+  customs form.
 - Rotating while clipping in one step produced offsets in the prototype; crop first, then
   rotate (or set page /Rotate).
 

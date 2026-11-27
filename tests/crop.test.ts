@@ -152,7 +152,7 @@ describe('no label', () => {
     const result = await cropLabels(await fixture('unrelated.pdf'), pdfjs, {
       profile: getProfile('label-103x199'),
     });
-    expect(result).toEqual({ labels: [], pdf: null });
+    expect(result).toEqual({ labels: [], pdf: null, a4Pdf: null });
   });
 
   it('analyses the output again without errors (round trip)', async () => {
@@ -199,5 +199,58 @@ describe('international DHL label with CN22 → 103 x 199 mm', () => {
     const [cn22, label] = result.labels;
     expect(cn22?.fit.ok && cn22.fit.placement.scale).toBe(1);
     expect(label?.fit).toMatchObject({ ok: false, reason: 'doesNotFit' });
+  });
+});
+
+describe('customs form output options', () => {
+  const crop = async (customsForms: 'withLabels' | 'separateA4' | 'omit') =>
+    cropLabels(await fixture('dhl-international-cn22.pdf'), pdfjs, {
+      profile: getProfile('label-103x199'),
+      customsForms,
+    });
+
+  it('withLabels (default): CN22 and label both on the label printer', async () => {
+    const result = await crop('withLabels');
+    expect(result.labels.map((l) => l.target)).toEqual(['labelPrinter', 'labelPrinter']);
+    expect(result.a4Pdf).toBeNull();
+    if (!result.pdf) throw new Error('no output');
+    expect((await PDFDocument.load(result.pdf)).getPageCount()).toBe(2);
+  });
+
+  it('separateA4: label on the roll, CN22 1:1 on its own A4 PDF', async () => {
+    const result = await crop('separateA4');
+    if (!result.pdf || !result.a4Pdf) throw new Error('missing output');
+    const labelDoc = await PDFDocument.load(result.pdf);
+    const a4Doc = await PDFDocument.load(result.a4Pdf);
+    expect(labelDoc.getPageCount()).toBe(1);
+    expect(a4Doc.getPageCount()).toBe(1);
+    expect(ptToMm(a4Doc.getPage(0).getWidth())).toBeCloseTo(210, 3);
+    expect(ptToMm(a4Doc.getPage(0).getHeight())).toBeCloseTo(297, 3);
+    const cn22 = result.labels.find((l) => l.target === 'a4Sheet');
+    expect(cn22?.detection.layoutId).toBe('customs-cn22');
+    expect(cn22?.fit.ok && cn22.fit.placement.scale).toBe(1);
+    expect(cn22?.fit.ok && cn22.fit.placement.rotation).toBe(0);
+    const [a4Page] = await analyze(result.a4Pdf);
+    const box = visibleBox(a4Page?.elements ?? []);
+    expect(ptToMm(width(box))).toBeCloseTo(79.3, 0);
+    expect(texts(a4Page?.elements ?? []).join(' ')).not.toContain('ausschneiden');
+  });
+
+  it('omit: only the label, no CN22 anywhere', async () => {
+    const result = await crop('omit');
+    expect(result.labels.map((l) => l.detection.layoutId)).toEqual(['dhl-paketmarke']);
+    expect(result.a4Pdf).toBeNull();
+    if (!result.pdf) throw new Error('no output');
+    const [page] = await analyze(result.pdf);
+    expect(texts(page?.elements ?? []).join(' ')).not.toContain('CN22');
+  });
+
+  it('does not affect documents without customs forms', async () => {
+    const result = await cropLabels(await fixture('dhl-paketmarke.pdf'), pdfjs, {
+      profile: getProfile('label-103x199'),
+      customsForms: 'separateA4',
+    });
+    expect(result.a4Pdf).toBeNull();
+    expect(result.labels).toHaveLength(1);
   });
 });

@@ -3,6 +3,12 @@
  * markers and features to look for, never fixed page coordinates.
  */
 
+/**
+ * What a detected area is. Customs forms can be printed together with the labels, on a
+ * separate A4 sheet, or not at all; shipping labels always go to the label printer.
+ */
+export type LayoutRole = 'shippingLabel' | 'customsForm';
+
 /** Expected size of the printable label content, independent of orientation. */
 export interface ExpectedSizeMm {
   readonly long: number;
@@ -18,6 +24,7 @@ export interface ExpectedSizeMm {
 export interface CutLineLayout {
   readonly kind: 'cutLine';
   readonly id: string;
+  readonly role: LayoutRole;
   readonly carrier: string;
   /** All of these must appear on the label side (case-insensitive substring match). */
   readonly markers: readonly string[];
@@ -40,6 +47,7 @@ export interface CutLineLayout {
 export interface CropMarkLayout {
   readonly kind: 'cropMarks';
   readonly id: string;
+  readonly role: LayoutRole;
   readonly carrier: string;
   /** Length range of a single cross arm, in pt. */
   readonly armLengthPt: { readonly min: number; readonly max: number };
@@ -57,6 +65,7 @@ export interface CropMarkLayout {
 export interface FramedFormLayout {
   readonly kind: 'framedForm';
   readonly id: string;
+  readonly role: LayoutRole;
   readonly carrier: string;
   /**
    * All of these must appear inside the frame. Matching ignores case and whitespace,

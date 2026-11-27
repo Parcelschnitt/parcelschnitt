@@ -8,6 +8,7 @@ import type { FramedFormLayout } from './types.ts';
 export const customsCn22: FramedFormLayout = {
   kind: 'framedForm',
   id: 'customs-cn22',
+  role: 'customsForm',
   carrier: 'Deutsche Post / DHL',
   markers: ['CN22'],
   expectedFrameMm: { long: 110, short: 79, tolerance: 5 },

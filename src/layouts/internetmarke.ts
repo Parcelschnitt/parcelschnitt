@@ -7,6 +7,7 @@ import type { CropMarkLayout } from './types.ts';
 export const internetmarke: CropMarkLayout = {
   kind: 'cropMarks',
   id: 'internetmarke',
+  role: 'shippingLabel',
   carrier: 'Deutsche Post',
   armLengthPt: { min: 8, max: 24 },
   expectedFrameMm: { long: 90, short: 47, tolerance: 10 },
