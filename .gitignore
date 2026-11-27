@@ -155,3 +155,11 @@ vite.config.ts.timestamp-*
 .nx/cache
 .nx/workspace-data
 .nx/migrate-runs
+
+# Parcelschnitt: never commit shipping labels. Real labels contain personal data of
+# third parties. Only synthetic fixtures under tests/fixtures/ are allowed.
+*.[pP][dD][fF]
+!tests/fixtures/**/*.[pP][dD][fF]
+
+# SBOM output (generated in CI)
+sbom*.json
