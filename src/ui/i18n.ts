@@ -24,9 +24,9 @@ const de = {
   'settings.title': 'Einstellungen',
   'settings.profile': 'Etikettenformat',
   'settings.customs': 'Zollinhaltserklärung (CN22)',
-  'settings.customs.withLabels': 'Mit auf das Etikett drucken',
-  'settings.customs.separateA4': 'Separat auf A4 drucken',
-  'settings.customs.omit': 'Nicht drucken',
+  'settings.customs.withLabels': 'Eigenes Etikett im gleichen Format',
+  'settings.customs.separateA4': 'Separat auf A4-Papier',
+  'settings.customs.omit': 'Nicht ausgeben',
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
   'settings.remember': 'Einstellungen auf diesem Gerät merken',
   'settings.rememberHint':
@@ -74,6 +74,34 @@ const de = {
   'error.unsupportedBrowser':
     'Dein Browser wird nicht unterstützt. Bitte verwende eine aktuelle Version von Firefox, Chrome, Edge oder Safari.',
 
+  'intro.text':
+    'Versandportale liefern Etiketten meist als A4-PDF mit Beleg, Scheren und Schnittlinien. Parcelschnitt schneidet daraus genau das Etikett aus, dreht es richtig herum und legt es in Originalgröße auf das Format deiner Etikettenrolle.',
+  'howto.title': 'So geht’s',
+  'howto.step1':
+    'Etikett wie gewohnt als PDF herunterladen, z. B. bei DHL, eBay oder der Internetmarke der Deutschen Post.',
+  'howto.step2': 'PDF unten ablegen und das Format deiner Etikettenrolle wählen.',
+  'howto.step3': 'Ergebnis herunterladen oder direkt drucken, in Originalgröße (100 %).',
+  'more.title': 'Mehr erfahren',
+  'more.supported':
+    'Unterstützt: DHL-Paketmarke (national und international, auch über eBay und den Post-Shop), Internetmarke der Deutschen Post und Zollinhaltserklärung CN22.',
+  'more.profiles':
+    'Formate: 103 × 199 mm (Standard für DHL), 100 × 150 mm, 103 × 150 mm, DYMO 99014 (54 × 101 mm) und Brother 62 mm Endlosband.',
+  'more.customs':
+    'Zollinhaltserklärung: Sie wird auf Wunsch als eigenes Etikett im gleichen Format ausgegeben, damit du die Rolle nicht wechseln musst, oder separat auf A4-Papier.',
+  'more.print':
+    'Drucken: Im Druckdialog „Tatsächliche Größe“ bzw. 100 % wählen und im Druckertreiber das passende Etikettenformat einstellen.',
+  'more.privacy':
+    'Datenschutz: Die PDF wird ausschließlich in deinem Browser verarbeitet. Sie wird nicht hochgeladen, und die Seite lädt keine Inhalte von anderen Servern.',
+  'more.unknown':
+    'Etikett nicht erkannt? Manueller Zuschnitt folgt. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
+  'more.disclaimer':
+    'Parcelschnitt ist ein unabhängiges Open-Source-Projekt und steht in keiner Verbindung zu DHL oder der Deutschen Post.',
+  'support.title': 'Parcelschnitt unterstützen',
+  'support.text':
+    'Parcelschnitt ist kostenlos und werbefrei. Wenn es dir Zeit spart, kannst du die Weiterentwicklung über GitHub Sponsors unterstützen.',
+  'support.button': 'Über GitHub Sponsors unterstützen',
+  'footer.source': 'Quellcode auf GitHub',
+  'link.external': '(externer Link zu GitHub)',
   'footer.license': 'Open Source, MIT-Lizenz',
   'footer.thirdParty': 'Lizenzen verwendeter Software',
 } as const;
@@ -96,9 +124,9 @@ const en: Record<MessageKey, string> = {
   'settings.title': 'Settings',
   'settings.profile': 'Label size',
   'settings.customs': 'Customs declaration (CN22)',
-  'settings.customs.withLabels': 'Print with the labels',
-  'settings.customs.separateA4': 'Print separately on A4',
-  'settings.customs.omit': 'Do not print',
+  'settings.customs.withLabels': 'Own label in the same size',
+  'settings.customs.separateA4': 'Separately on A4 paper',
+  'settings.customs.omit': 'Leave out',
   'settings.allowShrink': 'Shrink anyway (not recommended)',
   'settings.remember': 'Remember settings on this device',
   'settings.rememberHint':
@@ -145,6 +173,34 @@ const en: Record<MessageKey, string> = {
   'error.unsupportedBrowser':
     'Your browser is not supported. Please use a current version of Firefox, Chrome, Edge or Safari.',
 
+  'intro.text':
+    'Shipping portals usually deliver labels as A4 PDFs with a receipt, scissors and cut lines. Parcelschnitt cuts out exactly the label, turns it the right way round and places it at full size on your label roll.',
+  'howto.title': 'How it works',
+  'howto.step1':
+    'Download your label as a PDF as usual, e.g. from DHL, eBay or Deutsche Post Internetmarke.',
+  'howto.step2': 'Drop the PDF below and choose the size of your label roll.',
+  'howto.step3': 'Download the result or print it directly, at full size (100 %).',
+  'more.title': 'Learn more',
+  'more.supported':
+    'Supported: DHL Paketmarke (national and international, also via eBay and the Post-Shop), Deutsche Post Internetmarke and customs declaration CN22.',
+  'more.profiles':
+    'Sizes: 103 × 199 mm (standard for DHL), 100 × 150 mm, 103 × 150 mm, DYMO 99014 (54 × 101 mm) and Brother 62 mm continuous tape.',
+  'more.customs':
+    'Customs declaration: on request it becomes its own label in the same size, so you do not have to change rolls, or a separate A4 page.',
+  'more.print':
+    'Printing: choose "Actual size" or 100 % in the print dialog and set the matching label size in the printer driver.',
+  'more.privacy':
+    'Privacy: the PDF is processed only in your browser. It is not uploaded, and the page loads nothing from other servers.',
+  'more.unknown':
+    'Label not recognised? Manual cropping will follow. You can report new label types on GitHub, please without attaching the real PDF.',
+  'more.disclaimer':
+    'Parcelschnitt is an independent open-source project and is not affiliated with DHL or Deutsche Post.',
+  'support.title': 'Support Parcelschnitt',
+  'support.text':
+    'Parcelschnitt is free and ad-free. If it saves you time, you can support its development via GitHub Sponsors.',
+  'support.button': 'Support via GitHub Sponsors',
+  'footer.source': 'Source code on GitHub',
+  'link.external': '(external link to GitHub)',
   'footer.license': 'Open source, MIT licence',
   'footer.thirdParty': 'Third-party licences',
 };

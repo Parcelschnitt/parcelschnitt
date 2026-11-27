@@ -41,6 +41,7 @@ const ui = {
   rememberCheckbox: element('remember-checkbox', HTMLInputElement),
   rememberFailed: element('remember-failed', HTMLParagraphElement),
   shrinkCheckbox: element('shrink-checkbox', HTMLInputElement),
+  outputSection: element('output-section', HTMLElement),
   status: element('status', HTMLDivElement),
   labelList: element('label-list', HTMLUListElement),
   labelOutput: element('label-output', HTMLDivElement),
@@ -183,6 +184,7 @@ function renderLabelList(result: ResultResponse): void {
 }
 
 function setStatus(text: string, isError = false): void {
+  ui.outputSection.hidden = text === '';
   ui.status.textContent = text;
   ui.status.classList.toggle('error', isError);
 }
