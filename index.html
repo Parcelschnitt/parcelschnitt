@@ -50,7 +50,16 @@
             <li data-i18n="more.print"></li>
             <li data-i18n="more.privacy"></li>
             <li data-i18n="more.hidden"></li>
-            <li data-i18n="more.unknown"></li>
+            <li>
+              <span data-i18n="more.unknown"></span>
+              <a
+                href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=new-layout.yml"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><span data-i18n="report.layout"></span
+                ><span class="visually-hidden" data-i18n="link.external"></span
+              ></a>
+            </li>
           </ul>
         </details>
       </section>
@@ -152,6 +161,16 @@
       <section id="output-section" class="card" aria-labelledby="output-heading" hidden>
         <h2 id="output-heading" data-i18n="output.title"></h2>
         <div id="status" class="status" role="status" aria-live="polite"></div>
+        <p id="report-layout" class="hint" hidden>
+          <span data-i18n="report.layoutHint"></span>
+          <a
+            href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=new-layout.yml"
+            target="_blank"
+            rel="noopener noreferrer"
+            ><span data-i18n="report.layout"></span
+            ><span class="visually-hidden" data-i18n="link.external"></span
+          ></a>
+        </p>
         <ul id="label-list" class="label-list"></ul>
         <button
           type="button"
@@ -219,6 +238,13 @@
           <span data-i18n="footer.source"></span>
           <span class="visually-hidden" data-i18n="link.external"></span>
         </a>
+        <a
+          href="https://github.com/Parcelschnitt/parcelschnitt/issues/new?template=bug-report.yml"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><span data-i18n="report.bug"></span
+          ><span class="visually-hidden" data-i18n="link.external"></span
+        ></a>
         <span data-i18n="footer.license"></span>
         <a href="./third-party-licenses.txt" data-i18n="footer.thirdParty"></a>
         <a href="./impressum.html" data-carry-theme data-i18n="footer.imprint"></a>

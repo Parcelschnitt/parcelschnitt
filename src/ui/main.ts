@@ -65,6 +65,7 @@ const ui = {
   manualBack: element('manual-back', HTMLButtonElement),
   manualStart: element('manual-start', HTMLButtonElement),
   outputSection: element('output-section', HTMLElement),
+  reportLayout: element('report-layout', HTMLParagraphElement),
   status: element('status', HTMLDivElement),
   labelList: element('label-list', HTMLUListElement),
   labelOutput: element('label-output', HTMLDivElement),
@@ -94,6 +95,8 @@ interface State {
   profileLocked: boolean;
   /** Format the worker chose automatically for the current file, if any. */
   autoChosenProfile: ProfileId | null;
+  /** Automatic detection found nothing in the current file. */
+  nothingDetected: boolean;
   /** Latest crop request (auto or manual); older responses are ignored. */
   requestId: number;
   /** Latest page-rendering request, counted separately from crop requests. */
@@ -111,6 +114,7 @@ const state: State = {
   mode: 'auto',
   profileLocked: false,
   autoChosenProfile: null,
+  nothingDetected: false,
   requestId: 0,
   pagesRequestId: 0,
   pages: null,
@@ -251,6 +255,8 @@ function renderResult(): void {
   clearResults();
   ui.outputSection.hidden = state.file === null && state.lastError === null;
   ui.manualStart.hidden = state.mode === 'manual' || state.lastResult === null;
+  // Offer to report the layout whenever detection found nothing in this file.
+  ui.reportLayout.hidden = !state.nothingDetected || state.lastError !== null;
   if (state.lastError) {
     setStatus(errorMessage(state.lang, state.lastError), true);
     return;
@@ -390,7 +396,10 @@ worker.addEventListener('message', (event: MessageEvent<unknown>) => {
     state.lastResult = response;
     state.lastError = null;
     adoptProfile(response.profileId);
-    if (state.mode === 'auto' && response.labels.length === 0) enterManual();
+    if (state.mode === 'auto' && response.labels.length === 0) {
+      state.nothingDetected = true;
+      enterManual();
+    }
   }
   renderResult();
 });
@@ -553,6 +562,7 @@ async function acceptFile(file: File): Promise<void> {
   state.mode = 'auto';
   state.profileLocked = false;
   state.autoChosenProfile = null;
+  state.nothingDetected = false;
   state.lastResult = null;
   state.lastError = null;
   ui.manualSection.hidden = true;

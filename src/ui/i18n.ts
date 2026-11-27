@@ -127,7 +127,11 @@ const de = {
   'more.hidden':
     'Technischer Hinweis: Die erzeugte PDF enthält die Originalseite unsichtbar im Hintergrund, sichtbar und gedruckt wird nur das Etikett. Bei DHL steckt dort der Beleg, der dieselben Angaben wie das Etikett enthält. Steht auf der Seite weiterer Text, etwa eine Rechnung, weist Parcelschnitt dich darauf hin. Gib die Datei in diesem Fall nicht weiter.',
   'more.unknown':
-    'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du auf GitHub melden, bitte ohne die echte PDF anzuhängen.',
+    'Etikett nicht erkannt? Dann wählst du den Bereich einfach selbst aus. Neue Etikettenarten kannst du über ein Formular auf GitHub melden (kostenloses GitHub-Konto nötig), bitte ohne die echte PDF anzuhängen:',
+  'report.layout': 'Neues Etikett melden',
+  'report.layoutHint':
+    'Sollte Parcelschnitt dieses Etikett kennen? Beschreibe es uns über das Formular auf GitHub (kostenloses Konto nötig). Bitte die echte PDF nicht anhängen.',
+  'report.bug': 'Fehler melden',
   'more.disclaimer':
     'Parcelschnitt ist ein unabhängiges Open-Source-Projekt und steht in keiner Verbindung zu DHL oder der Deutschen Post.',
   'support.title': 'Parcelschnitt unterstützen',
@@ -262,7 +266,11 @@ const en: Record<MessageKey, string> = {
   'more.hidden':
     'Technical note: the generated PDF contains the original page invisibly in the background; only the label is visible and printed. For DHL this is the receipt, which repeats the label data. If the page holds further text, such as an invoice, Parcelschnitt tells you. In that case, do not pass the file on.',
   'more.unknown':
-    'Label not recognised? Then simply select the area yourself. You can report new label types on GitHub, please without attaching the real PDF.',
+    'Label not recognised? Then simply select the area yourself. You can report new label types through a form on GitHub (free GitHub account required), please without attaching the real PDF:',
+  'report.layout': 'Report a new label',
+  'report.layoutHint':
+    'Should Parcelschnitt know this label? Describe it to us through the form on GitHub (free account required). Please do not attach the real PDF.',
+  'report.bug': 'Report a bug',
   'more.disclaimer':
     'Parcelschnitt is an independent open-source project and is not affiliated with DHL or Deutsche Post.',
   'support.title': 'Support Parcelschnitt',
