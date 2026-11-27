@@ -7,6 +7,7 @@ import {
   saveSettings,
   type SettingsStorage,
 } from '../src/ui/settings.ts';
+import { themeFromUrl, withTheme } from '../src/ui/theme.ts';
 
 function memoryStorage(): SettingsStorage & { data: Map<string, string> } {
   const data = new Map<string, string>();
@@ -122,5 +123,25 @@ describe('remembered settings', () => {
         theme: 'system',
       }),
     ).toBe(false);
+  });
+});
+
+describe('theme passed along in links', () => {
+  const base = 'https://parcelschnitt.github.io/parcelschnitt/';
+
+  it('reads only valid themes from the address', () => {
+    expect(themeFromUrl('?theme=light')).toBe('light');
+    expect(themeFromUrl('?theme=dark&x=1')).toBe('dark');
+    expect(themeFromUrl('?theme=neon')).toBeNull();
+    expect(themeFromUrl('')).toBeNull();
+  });
+
+  it('adds, replaces and removes the parameter and keeps fragments', () => {
+    expect(withTheme('./impressum.html', 'light', base)).toBe(`${base}impressum.html?theme=light`);
+    expect(withTheme('./?theme=light', 'dark', base)).toBe(`${base}?theme=dark`);
+    expect(withTheme('./?theme=dark', 'system', base)).toBe(base);
+    expect(withTheme('./datenschutz.html#en', 'dark', base)).toBe(
+      `${base}datenschutz.html?theme=dark#en`,
+    );
   });
 });

@@ -19,7 +19,7 @@ import {
 } from './protocol.ts';
 import { defaultSelection, fromMm, toMm, turn, type Box } from './selection.ts';
 import { SelectionEditor } from './selectionEditor.ts';
-import { applyTheme, isTheme, type Theme } from './theme.ts';
+import { applyTheme, carryThemeInLinks, isTheme, themeFromUrl, type Theme } from './theme.ts';
 import { browserStorage, forgetSettings, loadSettings, saveSettings } from './settings.ts';
 import {
   describeLabel,
@@ -624,8 +624,7 @@ function restoreSettings(): void {
   ui.profileSelect.value = saved.profileId;
   ui.customsSelect.value = saved.customsForms;
   ui.autoProfileCheckbox.checked = saved.autoProfile;
-  ui.themeSelect.value = saved.theme;
-  applyTheme(saved.theme);
+  setTheme(saved.theme);
   ui.rememberCheckbox.checked = true;
 }
 
@@ -634,8 +633,15 @@ function selectedTheme(): Theme {
   return isTheme(value) ? value : 'system';
 }
 
+function setTheme(theme: Theme): void {
+  ui.themeSelect.value = theme;
+  applyTheme(theme);
+  // Pass the choice on to the legal pages through their links, without storing it.
+  carryThemeInLinks(theme);
+}
+
 ui.themeSelect.addEventListener('change', () => {
-  applyTheme(selectedTheme());
+  setTheme(selectedTheme());
   persistSettings();
 });
 
@@ -701,6 +707,8 @@ function browserSupported(): boolean {
 applyStaticTexts();
 renderProfileOptions();
 restoreSettings();
+// A theme passed along from a legal page wins for this visit (nothing is stored).
+setTheme(themeFromUrl(location.search) ?? selectedTheme());
 renderProfileCaution();
 if (!browserSupported()) {
   ui.fileInput.disabled = true;

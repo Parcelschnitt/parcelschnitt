@@ -86,7 +86,9 @@ docs/            user guide, "report a new layout"
   The light theme keeps secondary text well above WCAG AA contrast.
 - Settings persistence is opt-in ("remember settings", off by default): only profile,
   auto-format choice, customs option and appearance in localStorage, validated on read;
-  unticking deletes them. The legal pages read the stored appearance (`legalPage.ts`). The shrink
+  unticking deletes them. Without "remember", the appearance travels between the main and the
+  legal pages as `?theme=` on links marked `data-carry-theme` (nothing stored); the legal
+  pages apply it via `legalPage.ts`. The shrink
   permission is never stored. All text is set via `textContent`.
 
 ## Hidden content in outputs (decision 2026-11-27)
