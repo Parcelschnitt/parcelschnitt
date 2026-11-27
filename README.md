@@ -1,0 +1,91 @@
+# Parcelschnitt
+
+> **⚠️ In Entwicklung, noch nicht nutzbar.**
+> **⚠️ Work in progress, not usable yet.**
+
+[Deutsch](#deutsch) · [English](#english)
+
+---
+
+## Deutsch
+
+Parcelschnitt schneidet A4-Versandetiketten als PDF auf das genaue Format deiner
+Etikettendrucker-Rolle zu, zum Beispiel die DHL-Paketmarke auf 103 × 199 mm oder die
+Internetmarke der Deutschen Post auf DYMO 99014.
+
+**Datenschutz zuerst:** Alles läuft in deinem Browser. Es gibt keinen Server, keine
+Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner nicht.
+
+### Geplante Funktionen
+
+- Automatische Erkennung von DHL-Paketmarke (eBay, DHL Online-Frankierung, Post-Shop) und
+  Internetmarke anhand des Inhalts, nicht anhand fester Koordinaten
+- Zuschnitt in Originalgröße (100 %); Barcodes bleiben Vektoren und werden nicht gerastert
+- Profile: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
+- Warnung, wenn ein Etikett nicht 1:1 auf das gewählte Format passt; nie stilles Verkleinern
+- Manueller Zuschnitt, wenn kein Layout sicher erkannt wird
+- Später: Desktop-App mit Direktdruck und überwachtem Ordner
+
+### Stand
+
+Das Grundgerüst (Erkennung und Zuschnitt, Tests) steht. Eine Oberfläche gibt es noch nicht.
+
+### Entwicklung
+
+Voraussetzung: Node.js 24.
+
+```sh
+npm install
+npm test
+npm run lint
+npm run typecheck
+```
+
+Mitarbeit: siehe [CONTRIBUTING.md](CONTRIBUTING.md). Sicherheitslücken bitte vertraulich
+melden: siehe [SECURITY.md](SECURITY.md).
+
+### Lizenz
+
+[MIT](LICENSE)
+
+---
+
+## English
+
+Parcelschnitt crops A4 shipping-label PDFs to the exact size of your label printer roll,
+for example a DHL Paketmarke to 103 × 199 mm or a Deutsche Post Internetmarke to DYMO 99014.
+
+**Privacy first:** everything runs in your browser. No server, no uploads, no account, no
+tracking. Your labels never leave your computer.
+
+### Planned features
+
+- Automatic detection of DHL Paketmarke (eBay, DHL Online-Frankierung, Post-Shop) and
+  Internetmarke based on content, not fixed coordinates
+- Cropping at 100 % scale; barcodes stay vectors and are never rasterised
+- Profiles: 103 × 199 mm, 100 × 150 mm, 103 × 150 mm, DYMO 99014, Brother 62 mm
+- A warning when a label does not fit the chosen size 1:1; never silent shrinking
+- Manual cropping when no layout is detected with confidence
+- Later: desktop app with direct printing and a watched folder
+
+### Status
+
+The foundation (detection, cropping, tests) is in place. There is no user interface yet.
+
+### Development
+
+Requires Node.js 24.
+
+```sh
+npm install
+npm test
+npm run lint
+npm run typecheck
+```
+
+Contributing: see [CONTRIBUTING.md](CONTRIBUTING.md). Please report vulnerabilities
+privately: see [SECURITY.md](SECURITY.md).
+
+### License
+
+[MIT](LICENSE)
