@@ -1,4 +1,4 @@
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { describe, expect, it } from 'vitest';
 import { LIMITS, ParcelschnittError } from '../src/core/index.ts';
 import { analyze } from './helpers.ts';

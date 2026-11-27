@@ -5,7 +5,7 @@
  * Cropping and rotation are separate steps (embed with a bounding box, then place with a
  * rotation) — doing both in one transformation produced offsets in the prototype.
  */
-import { PDFDocument, degrees } from 'pdf-lib';
+import { PDFDocument, degrees } from '@cantoo/pdf-lib';
 import { height, invert, normalizeQuarterTurn, transformRect, width } from './geometry.ts';
 import { ParcelschnittError } from './errors.ts';
 import type { Detection } from './detection.ts';

@@ -24,7 +24,7 @@
     "pre-commit": "node scripts/check-pdfs.ts --staged"
   },
   "dependencies": {
-    "pdf-lib": "1.17.1",
+    "@cantoo/pdf-lib": "2.11.1",
     "pdfjs-dist": "6.5.438"
   },
   "devDependencies": {

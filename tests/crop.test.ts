@@ -1,4 +1,4 @@
-import { PDFDocument, degrees } from 'pdf-lib';
+import { PDFDocument, degrees } from '@cantoo/pdf-lib';
 import { describe, expect, it } from 'vitest';
 import { cropLabels } from '../src/core/index.ts';
 import { detectLabels } from '../src/core/detect.ts';

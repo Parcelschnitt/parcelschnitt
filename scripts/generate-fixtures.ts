@@ -13,7 +13,14 @@
  */
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { PDFDocument, StandardFonts, degrees, rgb, type PDFFont, type PDFPage } from 'pdf-lib';
+import {
+  PDFDocument,
+  StandardFonts,
+  degrees,
+  rgb,
+  type PDFFont,
+  type PDFPage,
+} from '@cantoo/pdf-lib';
 
 const PT_PER_MM = 72 / 25.4;
 const mm = (value: number): number => value * PT_PER_MM;

@@ -29,7 +29,7 @@ watched folder. Keep `src/core` free of DOM and UI code so it can be reused ther
 
 ## Stack
 
-TypeScript (strict), Vite, pdf.js (Apache-2.0), pdf-lib (MIT), Vitest, ESLint, Prettier.
+TypeScript (strict), Vite, pdf.js (Apache-2.0), @cantoo/pdf-lib (MIT, maintained fork of pdf-lib), Vitest, ESLint, Prettier.
 No heavy UI framework. UI strings via a small i18n module, German and English.
 
 ## Layout

@@ -3,7 +3,7 @@
  * the variable is unset, e.g. in CI. Assertions compare numbers and booleans only, so a
  * failure never prints label content.
  */
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { describe, expect, it } from 'vitest';
 import { cropLabels } from '../src/core/index.ts';
 import { detectLabels } from '../src/core/detect.ts';

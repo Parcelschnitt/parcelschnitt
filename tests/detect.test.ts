@@ -1,4 +1,4 @@
-import { PDFDocument, degrees } from 'pdf-lib';
+import { PDFDocument, degrees } from '@cantoo/pdf-lib';
 import { describe, expect, it } from 'vitest';
 import { detectLabels } from '../src/core/detect.ts';
 import { intersect, mmToPt } from '../src/core/geometry.ts';
