@@ -31,6 +31,13 @@ npm run fixtures     # regenerate synthetic fixtures after changing the generato
 - Small commits, [Conventional Commits](https://www.conventionalcommits.org/) in English.
 - Code, identifiers and comments in English; user-facing docs in German and English.
 
+## Imprint and privacy pages
+
+`impressum.html` and `datenschutz.html` contain `{{legal.*}}` placeholders. The operator's
+details are filled in at build time from `PARCELSCHNITT_LEGAL_*` environment variables or from
+a local `legal.local.json` (git-ignored; see `legal.example.json`). Never commit real details.
+Deployment builds set `PARCELSCHNITT_REQUIRE_LEGAL=1` and fail without complete details.
+
 ## Reporting a new label layout
 
 Open an issue describing the layout (carrier, where it comes from, page size, marker texts,

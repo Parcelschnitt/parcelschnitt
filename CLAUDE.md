@@ -79,6 +79,13 @@ docs/            user guide, "report a new layout"
   customs option in localStorage, validated on read; unticking deletes them. The shrink
   permission is never stored. All text is set via `textContent`.
 
+## Legal pages
+
+- `impressum.html` (§ 5 DDG) and `datenschutz.html` (GDPR) are static, German binding with an
+  English translation. Operator details come from env vars / git-ignored `legal.local.json`
+  via `scripts/legal-plugin.ts`; never write real personal details into the repository.
+- Update the privacy policy whenever data processing changes (hosting, storage, new links).
+
 ## Maintainer guidelines
 
 The maintainer's personal coding and security guidelines apply to this project in addition

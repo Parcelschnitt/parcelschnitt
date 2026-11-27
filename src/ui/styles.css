@@ -362,3 +362,26 @@ details.more li + li {
   flex-wrap: wrap;
   gap: 0.25rem 1rem;
 }
+
+.brand-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.legal h1 {
+  font-size: 1.5rem;
+}
+
+.legal h2 {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+}
+
+.legal a {
+  color: inherit;
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Vorname Nachname",
+  "street": "Musterstraße 1",
+  "postalCode": "12345",
+  "city": "Musterstadt",
+  "country": "Deutschland",
+  "email": "kontakt@example.org"
+}

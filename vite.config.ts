@@ -1,4 +1,8 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vitest/config';
+import { legalDetailsPlugin } from './scripts/legal-plugin.ts';
+
+const page = (name: string): string => fileURLToPath(new URL(name, import.meta.url));
 
 /**
  * Content Security Policy. GitHub Pages cannot send headers, so the policy is delivered as a
@@ -45,11 +49,21 @@ function contentSecurityPolicy(): Plugin {
 export default defineConfig({
   // Relative asset paths: the site works under any GitHub Pages sub-path.
   base: './',
-  plugins: [contentSecurityPolicy()],
+  plugins: [
+    contentSecurityPolicy(),
+    legalDetailsPlugin({ env: process.env, localFile: page('legal.local.json') }),
+  ],
   build: {
     target: 'es2023',
     sourcemap: false,
     modulePreload: { polyfill: false },
+    rolldownOptions: {
+      input: {
+        main: page('index.html'),
+        impressum: page('impressum.html'),
+        datenschutz: page('datenschutz.html'),
+      },
+    },
   },
   worker: {
     format: 'es',

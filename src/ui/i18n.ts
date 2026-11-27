@@ -104,6 +104,8 @@ const de = {
   'link.external': '(externer Link zu GitHub)',
   'footer.license': 'Open Source, MIT-Lizenz',
   'footer.thirdParty': 'Lizenzen verwendeter Software',
+  'footer.imprint': 'Impressum',
+  'footer.privacy': 'Datenschutz',
 } as const;
 
 export type MessageKey = keyof typeof de;
@@ -203,6 +205,8 @@ const en: Record<MessageKey, string> = {
   'link.external': '(external link to GitHub)',
   'footer.license': 'Open source, MIT licence',
   'footer.thirdParty': 'Third-party licences',
+  'footer.imprint': 'Legal notice',
+  'footer.privacy': 'Privacy policy',
 };
 
 const MESSAGES: Record<Lang, Record<MessageKey, string>> = { de, en };
