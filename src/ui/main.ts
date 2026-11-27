@@ -345,6 +345,20 @@ ui.langToggle.addEventListener('click', () => {
 
 // ---------------------------------------------------------------- start
 
+/** Features the worker needs (pdf.js 6 and OffscreenCanvas previews). */
+function browserSupported(): boolean {
+  return (
+    typeof OffscreenCanvas !== 'undefined' &&
+    typeof createImageBitmap === 'function' &&
+    'toHex' in Uint8Array.prototype &&
+    'withResolvers' in Promise
+  );
+}
+
 applyStaticTexts();
 renderProfileOptions();
 renderProfileCaution();
+if (!browserSupported()) {
+  ui.fileInput.disabled = true;
+  setStatus(t(state.lang, 'error.unsupportedBrowser'), true);
+}
