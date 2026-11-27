@@ -1,7 +1,7 @@
 # Parcelschnitt
 
-> **⚠️ In Entwicklung, noch nicht nutzbar.**
-> **⚠️ Work in progress, not usable yet.**
+> **Erste Version:** [parcelschnitt.github.io/parcelschnitt](https://parcelschnitt.github.io/parcelschnitt/). Rückmeldungen und neue Etikettenarten sind willkommen.
+> **First version:** [parcelschnitt.github.io/parcelschnitt](https://parcelschnitt.github.io/parcelschnitt/). Feedback and new label types are welcome.
 
 [Deutsch](#deutsch) · [English](#english)
 
@@ -16,7 +16,7 @@ Internetmarke der Deutschen Post auf DYMO 99014.
 **Datenschutz zuerst:** Alles läuft in deinem Browser. Es gibt keinen Server, keine
 Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner nicht.
 
-### Geplante Funktionen
+### Funktionen
 
 - Automatische Erkennung von DHL-Paketmarke (eBay, DHL Online-Frankierung, Post-Shop,
   national und international), Zollinhaltserklärung CN22 und Internetmarke anhand des
@@ -29,8 +29,8 @@ Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner 
 
 ### Stand
 
-Erkennung, Zuschnitt, manueller Zuschnitt und die Weboberfläche stehen. Die
-Veröffentlichung als Website folgt.
+Die erste Version ist online und im Alltag getestet: Erkennung, Zuschnitt, manueller Zuschnitt
+und die Weboberfläche. Weitere Versanddienstleister und eine Desktop-App sind geplant.
 
 ### Entwicklung
 
@@ -62,7 +62,7 @@ for example a DHL Paketmarke to 103 × 199 mm or a Deutsche Post Internetmarke t
 **Privacy first:** everything runs in your browser. No server, no uploads, no account, no
 tracking. Your labels never leave your computer.
 
-### Planned features
+### Features
 
 - Automatic detection of DHL Paketmarke (eBay, DHL Online-Frankierung, Post-Shop, national
   and international), customs declaration CN22 and Internetmarke based on content, not
@@ -75,8 +75,8 @@ tracking. Your labels never leave your computer.
 
 ### Status
 
-Detection, cropping, manual cropping and the web interface are in place. Publishing the
-website will follow.
+The first version is online and tested in daily use: detection, cropping, manual cropping and
+the web interface. More carriers and a desktop app are planned.
 
 ### Development
 

@@ -10,7 +10,6 @@ export type Lang = 'de' | 'en';
 
 const de = {
   'app.tagline': 'Versandetiketten passgenau für den Etikettendrucker zuschneiden',
-  'app.wip': 'In Entwicklung, noch nicht für den Alltag gedacht',
   'app.privacy':
     'Alles bleibt auf deinem Gerät: Die PDF wird nur in deinem Browser verarbeitet. Keine Uploads, kein Konto, kein Tracking.',
   'lang.switch': 'English',
@@ -150,7 +149,6 @@ export type MessageKey = keyof typeof de;
 
 const en: Record<MessageKey, string> = {
   'app.tagline': 'Crop shipping labels to the exact size of your label printer',
-  'app.wip': 'Work in progress, not ready for everyday use',
   'app.privacy':
     'Everything stays on your device: the PDF is processed only in your browser. No uploads, no account, no tracking.',
   'lang.switch': 'Deutsch',
