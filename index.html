@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Parcelschnitt</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/ui/styles.css" />
+    <script type="module" src="/src/ui/main.ts"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img src="/logo.svg" alt="" width="48" height="48" />
+        <div>
+          <h1>Parcelschnitt</h1>
+          <p class="tagline" data-i18n="app.tagline"></p>
+        </div>
+      </div>
+      <button type="button" id="lang-toggle" class="link-button"></button>
+    </header>
+
+    <p class="wip" role="note" data-i18n="app.wip"></p>
+
+    <main>
+      <section class="card" aria-labelledby="howto-heading">
+        <p class="intro" data-i18n="intro.text"></p>
+        <h2 id="howto-heading" class="spaced" data-i18n="howto.title"></h2>
+        <ol class="steps">
+          <li data-i18n="howto.step1"></li>
+          <li data-i18n="howto.step2"></li>
+          <li data-i18n="howto.step3"></li>
+        </ol>
+        <details class="more">
+          <summary data-i18n="more.title"></summary>
+          <ul>
+            <li data-i18n="more.supported"></li>
+            <li data-i18n="more.profiles"></li>
+            <li data-i18n="more.customs"></li>
+            <li data-i18n="more.print"></li>
+            <li data-i18n="more.privacy"></li>
+            <li data-i18n="more.unknown"></li>
+          </ul>
+        </details>
+      </section>
+
+      <section class="card" aria-labelledby="file-heading">
+        <h2 id="file-heading" class="visually-hidden" data-i18n="file.drop"></h2>
+        <label id="drop-zone" class="drop-zone">
+          <input id="file-input" type="file" accept="application/pdf,.pdf" />
+          <span class="drop-title" data-i18n="file.drop"></span>
+          <span class="drop-hint" data-i18n="file.hint"></span>
+        </label>
+        <p id="file-name" class="file-name" hidden></p>
+      </section>
+
+      <section class="card" aria-labelledby="settings-heading">
+        <h2 id="settings-heading" data-i18n="settings.title"></h2>
+        <div class="field">
+          <label for="profile-select" data-i18n="settings.profile"></label>
+          <select id="profile-select"></select>
+          <p id="profile-caution" class="caution" hidden></p>
+        </div>
+        <div class="field" id="customs-field" hidden>
+          <label for="customs-select" data-i18n="settings.customs"></label>
+          <select id="customs-select">
+            <option value="withLabels" data-i18n="settings.customs.withLabels"></option>
+            <option value="separateA4" data-i18n="settings.customs.separateA4"></option>
+            <option value="omit" data-i18n="settings.customs.omit"></option>
+          </select>
+        </div>
+        <div class="field checkbox" id="shrink-field" hidden>
+          <input id="shrink-checkbox" type="checkbox" />
+          <label for="shrink-checkbox" data-i18n="settings.allowShrink"></label>
+        </div>
+        <div class="field checkbox remember">
+          <input id="remember-checkbox" type="checkbox" aria-describedby="remember-hint" />
+          <label for="remember-checkbox" data-i18n="settings.remember"></label>
+        </div>
+        <p id="remember-hint" class="hint" data-i18n="settings.rememberHint"></p>
+        <p id="remember-failed" class="caution" data-i18n="settings.rememberFailed" hidden></p>
+      </section>
+
+      <section id="output-section" class="card" aria-labelledby="output-heading" hidden>
+        <h2 id="output-heading" data-i18n="output.title"></h2>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <ul id="label-list" class="label-list"></ul>
+
+        <div id="label-output" class="output" hidden>
+          <h3 data-i18n="output.labels"></h3>
+          <div class="previews" id="label-previews"></div>
+          <div class="actions">
+            <a id="label-download" class="button primary" data-i18n="output.download"></a>
+            <a
+              id="label-open"
+              class="button"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-i18n="output.open"
+            ></a>
+          </div>
+        </div>
+
+        <div id="a4-output" class="output" hidden>
+          <h3 data-i18n="output.a4"></h3>
+          <div class="previews" id="a4-previews"></div>
+          <div class="actions">
+            <a id="a4-download" class="button primary" data-i18n="output.download"></a>
+            <a
+              id="a4-open"
+              class="button"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-i18n="output.open"
+            ></a>
+          </div>
+        </div>
+
+        <p id="print-hint" class="hint" data-i18n="output.printHint" hidden></p>
+      </section>
+      <section class="card support" aria-labelledby="support-heading">
+        <h2 id="support-heading" data-i18n="support.title"></h2>
+        <p data-i18n="support.text"></p>
+        <a
+          class="button primary"
+          href="https://github.com/sponsors/H2FSpawn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span data-i18n="support.button"></span>
+          <span class="visually-hidden" data-i18n="link.external"></span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p data-i18n="app.privacy"></p>
+      <p class="links">
+        <a
+          href="https://github.com/Parcelschnitt/parcelschnitt"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span data-i18n="footer.source"></span>
+          <span class="visually-hidden" data-i18n="link.external"></span>
+        </a>
+        <span data-i18n="footer.license"></span>
+        <a href="./third-party-licenses.txt" data-i18n="footer.thirdParty"></a>
+        <a href="./impressum.html" data-i18n="footer.imprint"></a>
+        <a href="./datenschutz.html" data-i18n="footer.privacy"></a>
+      </p>
+      <p class="disclaimer" data-i18n="more.disclaimer"></p>
+    </footer>
+  </body>
+</html>

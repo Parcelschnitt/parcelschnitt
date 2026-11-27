@@ -163,3 +163,6 @@ vite.config.ts.timestamp-*
 
 # SBOM output (generated in CI)
 sbom*.json
+
+# Operator details for imprint/privacy pages: published on the site, never in the repo
+legal.local.json

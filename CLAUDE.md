@@ -38,7 +38,7 @@ No heavy UI framework. UI strings via a small i18n module, German and English.
 src/core/        detection + cropping, no DOM
 src/layouts/     one description per label type (markers, bounds, rotation)
 src/profiles/    bundled printer profiles (mm)
-src/ui/          web UI, i18n de/en
+src/ui/          web UI, i18n de/en; worker.ts is the only place that parses PDFs
 tests/fixtures/  synthetic/anonymized PDFs only
 docs/            user guide, "report a new layout"
 ```
@@ -67,6 +67,24 @@ docs/            user guide, "report a new layout"
   customs form.
 - Rotating while clipping in one step produced offsets in the prototype; crop first, then
   rotate (or set page /Rotate).
+
+## Web UI architecture
+
+- `src/ui/worker.ts` runs the core with pdf.js in-thread (`globalThis.pdfjsWorker`) and
+  renders previews to OffscreenCanvas (`src/ui/preview.ts`). The main thread only receives
+  output PDFs, preview bitmaps and a content-free summary (`src/ui/protocol.ts`).
+- Main-thread UI code must not import pdf.js, pdf-lib or core runtime code (ESLint enforced).
+- The production CSP is injected as a meta tag at build time (`vite.config.ts`); CI checks it.
+- Settings persistence is opt-in ("remember settings", off by default): only profile and
+  customs option in localStorage, validated on read; unticking deletes them. The shrink
+  permission is never stored. All text is set via `textContent`.
+
+## Legal pages
+
+- `impressum.html` (§ 5 DDG) and `datenschutz.html` (GDPR) are static, German binding with an
+  English translation. Operator details come from env vars / git-ignored `legal.local.json`
+  via `scripts/legal-plugin.ts`; never write real personal details into the repository.
+- Update the privacy policy whenever data processing changes (hosting, storage, new links).
 
 ## Maintainer guidelines
 

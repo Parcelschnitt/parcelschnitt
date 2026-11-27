@@ -9,6 +9,9 @@
     "node": ">=24"
   },
   "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/third-party-licenses.ts dist",
+    "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex" />
+    <title>Impressum · Parcelschnitt</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/ui/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand brand-link" href="./">
+        <img src="/logo.svg" alt="" width="48" height="48" />
+        <span class="brand-name">Parcelschnitt</span>
+      </a>
+      <a class="link-button" href="#en" lang="en">English</a>
+    </header>
+
+    <main class="legal">
+      <section class="card" lang="de">
+        <h1>Impressum</h1>
+        <h2>Angaben gemäß § 5 Digitale-Dienste-Gesetz (DDG)</h2>
+        <p>
+          {{legal.name}}<br />
+          {{legal.street}}<br />
+          {{legal.postalCode}} {{legal.city}}<br />
+          {{legal.country}}
+        </p>
+
+        <h2>Kontakt</h2>
+        <p>E-Mail: <a href="mailto:{{legal.email}}">{{legal.email}}</a></p>
+
+        <h2>Über dieses Angebot</h2>
+        <p>
+          Parcelschnitt ist ein privat betriebenes, kostenloses Open-Source-Projekt. Es steht in
+          keiner Verbindung zu DHL, der Deutschen Post oder anderen Versanddienstleistern. Genannte
+          Marken gehören ihren jeweiligen Inhabern.
+        </p>
+
+        <h2>Links zu anderen Websites</h2>
+        <p>
+          Diese Website enthält Links zu GitHub (Quellcode und GitHub Sponsors). Für die Inhalte
+          dieser Seiten ist ausschließlich deren Anbieter verantwortlich.
+        </p>
+      </section>
+
+      <section class="card" id="en" lang="en">
+        <h1>Legal notice</h1>
+        <p class="hint">
+          English translation for convenience. The German version above is legally binding.
+        </p>
+        <h2>Information pursuant to § 5 of the German Digital Services Act (DDG)</h2>
+        <p>
+          {{legal.name}}<br />
+          {{legal.street}}<br />
+          {{legal.postalCode}} {{legal.city}}<br />
+          {{legal.country}}
+        </p>
+
+        <h2>Contact</h2>
+        <p>E-mail: <a href="mailto:{{legal.email}}">{{legal.email}}</a></p>
+
+        <h2>About this service</h2>
+        <p>
+          Parcelschnitt is a free open-source project run privately. It is not affiliated with DHL,
+          Deutsche Post or any other carrier. Trademarks belong to their respective owners.
+        </p>
+
+        <h2>Links to other websites</h2>
+        <p>
+          This website links to GitHub (source code and GitHub Sponsors). Their providers alone are
+          responsible for the content of those pages.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="links">
+        <a href="./">Parcelschnitt</a>
+        <a href="./datenschutz.html">Datenschutz / Privacy</a>
+      </p>
+    </footer>
+  </body>
+</html>
