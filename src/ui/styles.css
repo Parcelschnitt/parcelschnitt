@@ -498,3 +498,7 @@ details.more li + li {
   align-items: center;
   gap: 0.5rem;
 }
+
+.field-hint {
+  margin: -0.75rem 0 1rem;
+}

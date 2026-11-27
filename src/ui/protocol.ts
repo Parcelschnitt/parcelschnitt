@@ -17,6 +17,8 @@ export interface ProcessRequest {
   readonly profileId: ProfileId;
   readonly allowShrink: boolean;
   readonly customsForms: CustomsFormOutput;
+  /** Choose the profile recommended for the detected label instead of `profileId`. */
+  readonly autoProfile: boolean;
 }
 
 /** Render the source pages so the user can select an area by hand. */
@@ -75,6 +77,8 @@ export interface LabelSummary {
 export interface ResultResponse {
   readonly type: 'result';
   readonly id: number;
+  /** Label-printer profile actually used (may differ from the request with autoProfile). */
+  readonly profileId: ProfileId;
   readonly labels: readonly LabelSummary[];
   readonly pdf: ArrayBuffer | null;
   readonly a4Pdf: ArrayBuffer | null;
@@ -132,6 +136,7 @@ export function isProcessRequest(value: unknown): value is ProcessRequest {
     value['bytes'] instanceof ArrayBuffer &&
     isProfileId(value['profileId']) &&
     typeof value['allowShrink'] === 'boolean' &&
+    typeof value['autoProfile'] === 'boolean' &&
     CUSTOMS_OPTIONS.some((o) => o === value['customsForms'])
   );
 }
@@ -179,6 +184,7 @@ export function isWorkerResponse(value: unknown): value is WorkerResponse {
   if (value['type'] === 'pages') return Array.isArray(value['pages']);
   return (
     value['type'] === 'result' &&
+    isProfileId(value['profileId']) &&
     Array.isArray(value['labels']) &&
     Array.isArray(value['previews']) &&
     Array.isArray(value['a4Previews']) &&

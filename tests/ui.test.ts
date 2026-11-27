@@ -129,6 +129,7 @@ describe('worker protocol guards', () => {
     profileId: 'label-103x199',
     allowShrink: false,
     customsForms: 'withLabels',
+    autoProfile: true,
   };
 
   it('accepts a well-formed request', () => {
@@ -141,6 +142,7 @@ describe('worker protocol guards', () => {
     ['bytes as string', { ...valid, bytes: 'AAAA' }],
     ['non-integer id', { ...valid, id: 1.5 }],
     ['wrong type', { ...valid, type: 'eval' }],
+    ['autoProfile missing', { ...valid, autoProfile: undefined }],
     ['null', null],
   ])('rejects a request with %s', (_name, request) => {
     expect(isProcessRequest(request)).toBe(false);

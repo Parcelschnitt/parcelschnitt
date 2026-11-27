@@ -18,7 +18,7 @@ import {
   type CustomsFormOutput,
 } from '../src/core/index.ts';
 import { PROFILES, getProfile, type PrinterProfile } from '../src/profiles/index.ts';
-import { DEFAULT_PROFILE, SAMPLES_DIR, isInsideRepo, loadSamples } from '../tests/samples.ts';
+import { defaultProfileFor, SAMPLES_DIR, isInsideRepo, loadSamples } from '../tests/samples.ts';
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -51,7 +51,7 @@ async function main(): Promise<void> {
     }
     const profiles: PrinterProfile[] = allProfiles
       ? [...PROFILES]
-      : [getProfile(DEFAULT_PROFILE[first.layoutId] ?? 'label-103x199')];
+      : [getProfile(defaultProfileFor(first.layoutId))];
 
     for (const profile of profiles) {
       const result = await cropLabels(sample.bytes, pdfjs, { profile, customsForms });

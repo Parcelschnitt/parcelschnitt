@@ -41,6 +41,7 @@ const ui = {
   fileName: element('file-name', HTMLParagraphElement),
   profileSelect: element('profile-select', HTMLSelectElement),
   profileCaution: element('profile-caution', HTMLParagraphElement),
+  autoProfileCheckbox: element('auto-profile-checkbox', HTMLInputElement),
   customsField: element('customs-field', HTMLDivElement),
   customsSelect: element('customs-select', HTMLSelectElement),
   shrinkField: element('shrink-field', HTMLDivElement),
@@ -87,6 +88,10 @@ interface State {
   lang: Lang;
   file: { name: string; bytes: ArrayBuffer } | null;
   mode: 'auto' | 'manual';
+  /** The user picked the format by hand for the current file: no automatic choice. */
+  profileLocked: boolean;
+  /** Format the worker chose automatically for the current file, if any. */
+  autoChosenProfile: ProfileId | null;
   /** Latest crop request (auto or manual); older responses are ignored. */
   requestId: number;
   /** Latest page-rendering request, counted separately from crop requests. */
@@ -102,6 +107,8 @@ const state: State = {
   lang: detectLang(navigator.languages),
   file: null,
   mode: 'auto',
+  profileLocked: false,
+  autoChosenProfile: null,
   requestId: 0,
   pagesRequestId: 0,
   pages: null,
@@ -257,10 +264,14 @@ function renderResult(): void {
     return;
   }
   if (state.mode === 'auto') {
+    const chosen =
+      state.autoChosenProfile === null
+        ? ''
+        : ` ${t(state.lang, 'status.profileChosen', { profile: getProfile(state.autoChosenProfile).name })}`;
     setStatus(
       result.labels.length === 0
         ? t(state.lang, 'status.noLabel')
-        : t(state.lang, 'status.found', { count: result.labels.length }),
+        : `${t(state.lang, 'status.found', { count: result.labels.length })}${chosen}`,
     );
     ui.customsField.hidden = !hasCustomsForm(result.labels);
   } else {
@@ -307,6 +318,7 @@ function process(): void {
     profileId: selectedProfileId(),
     allowShrink: ui.shrinkCheckbox.checked,
     customsForms: selectedCustoms(),
+    autoProfile: ui.autoProfileCheckbox.checked && !state.profileLocked,
   };
   state.lastResult = null;
   setStatus(t(state.lang, 'status.processing'));
@@ -375,10 +387,19 @@ worker.addEventListener('message', (event: MessageEvent<unknown>) => {
   } else {
     state.lastResult = response;
     state.lastError = null;
+    adoptProfile(response.profileId);
     if (state.mode === 'auto' && response.labels.length === 0) enterManual();
   }
   renderResult();
 });
+
+/** Shows the format the worker used, if it chose one automatically. */
+function adoptProfile(profileId: ProfileId): void {
+  if (profileId === selectedProfileId()) return;
+  ui.profileSelect.value = profileId;
+  state.autoChosenProfile = profileId;
+  renderProfileCaution();
+}
 
 worker.addEventListener('error', () => {
   state.lastResult = null;
@@ -528,6 +549,8 @@ async function acceptFile(file: File): Promise<void> {
   state.pages = null;
   state.manual = null;
   state.mode = 'auto';
+  state.profileLocked = false;
+  state.autoChosenProfile = null;
   state.lastResult = null;
   state.lastError = null;
   ui.manualSection.hidden = true;
@@ -586,6 +609,7 @@ function persistSettings(): void {
   const saved = saveSettings(storage, {
     profileId: selectedProfileId(),
     customsForms: selectedCustoms(),
+    autoProfile: ui.autoProfileCheckbox.checked,
   });
   ui.rememberFailed.hidden = saved;
   if (!saved) ui.rememberCheckbox.checked = false;
@@ -596,6 +620,7 @@ function restoreSettings(): void {
   if (!saved) return;
   ui.profileSelect.value = saved.profileId;
   ui.customsSelect.value = saved.customsForms;
+  ui.autoProfileCheckbox.checked = saved.autoProfile;
   ui.rememberCheckbox.checked = true;
 }
 
@@ -609,10 +634,20 @@ ui.rememberCheckbox.addEventListener('change', () => {
 });
 
 ui.profileSelect.addEventListener('change', () => {
+  // A choice by hand wins over the automatic one, for this file.
+  state.profileLocked = true;
+  state.autoChosenProfile = null;
   renderProfileCaution();
   ui.shrinkCheckbox.checked = false;
   persistSettings();
   process();
+});
+ui.autoProfileCheckbox.addEventListener('change', () => {
+  state.profileLocked = false;
+  state.autoChosenProfile = null;
+  persistSettings();
+  if (ui.autoProfileCheckbox.checked) process();
+  else renderResult();
 });
 ui.customsSelect.addEventListener('change', () => {
   persistSettings();

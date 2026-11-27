@@ -23,6 +23,9 @@ const de = {
 
   'settings.title': 'Einstellungen',
   'settings.profile': 'Etikettenformat',
+  'settings.autoProfile': 'Format passend zum Etikett wählen',
+  'settings.autoProfileHint':
+    'Zum Beispiel DHL-Paketmarke → 103 × 199 mm, Internetmarke → DYMO 99014. Änderst du das Format von Hand, gilt das für die aktuelle Datei.',
   'settings.customs': 'Zollinhaltserklärung (CN22)',
   'settings.customs.withLabels': 'Eigenes Etikett im gleichen Format',
   'settings.customs.separateA4': 'Separat auf A4-Papier',
@@ -30,7 +33,7 @@ const de = {
   'settings.allowShrink': 'Trotzdem verkleinert ausgeben (nicht empfohlen)',
   'settings.remember': 'Einstellungen auf diesem Gerät merken',
   'settings.rememberHint':
-    'Gespeichert werden nur Etikettenformat und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
+    'Gespeichert werden nur Etikettenformat, automatische Formatwahl und Zoll-Option, im Browser dieses Geräts. Nichts wird übertragen. Häkchen entfernen löscht die Angaben.',
   'settings.rememberFailed':
     'Dein Browser erlaubt das Speichern nicht (z. B. im privaten Modus). Die Einstellungen gelten nur für diesen Besuch.',
 
@@ -42,6 +45,7 @@ const de = {
     'In dieser PDF wurde kein bekanntes Etikett sicher erkannt. Wähle den Bereich oben selbst aus.',
   'status.manualPending': 'Ziehe den Rahmen über das Etikett, das Ergebnis erscheint dann hier.',
   'status.found': '{count} Element(e) erkannt.',
+  'status.profileChosen': 'Format automatisch gewählt: {profile}.',
 
   'layout.dhl-paketmarke': 'DHL-Paketmarke',
   'layout.internetmarke': 'Internetmarke',
@@ -147,6 +151,9 @@ const en: Record<MessageKey, string> = {
 
   'settings.title': 'Settings',
   'settings.profile': 'Label size',
+  'settings.autoProfile': 'Choose the size to match the label',
+  'settings.autoProfileHint':
+    'For example DHL Paketmarke → 103 × 199 mm, Internetmarke → DYMO 99014. If you change the size by hand, that applies to the current file.',
   'settings.customs': 'Customs declaration (CN22)',
   'settings.customs.withLabels': 'Own label in the same size',
   'settings.customs.separateA4': 'Separately on A4 paper',
@@ -154,7 +161,7 @@ const en: Record<MessageKey, string> = {
   'settings.allowShrink': 'Shrink anyway (not recommended)',
   'settings.remember': 'Remember settings on this device',
   'settings.rememberHint':
-    'Only the label size and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
+    'Only the label size, the automatic size choice and the customs option are stored, in this browser on this device. Nothing is sent anywhere. Unticking deletes them.',
   'settings.rememberFailed':
     'Your browser does not allow storing settings (e.g. in private mode). They apply to this visit only.',
 
@@ -166,6 +173,7 @@ const en: Record<MessageKey, string> = {
     'No known label was detected with confidence in this PDF. Please select the area above.',
   'status.manualPending': 'Drag the frame over the label; the result then appears here.',
   'status.found': '{count} item(s) detected.',
+  'status.profileChosen': 'Size chosen automatically: {profile}.',
 
   'layout.dhl-paketmarke': 'DHL Paketmarke',
   'layout.internetmarke': 'Internetmarke',

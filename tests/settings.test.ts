@@ -43,18 +43,37 @@ describe('remembered settings', () => {
 
   it('round-trips profile and customs option, and nothing else', () => {
     const storage = memoryStorage();
-    expect(saveSettings(storage, { profileId: 'dymo-99014', customsForms: 'separateA4' })).toBe(
-      true,
-    );
-    expect(loadSettings(storage)).toEqual({ profileId: 'dymo-99014', customsForms: 'separateA4' });
+    expect(
+      saveSettings(storage, {
+        profileId: 'dymo-99014',
+        customsForms: 'separateA4',
+        autoProfile: false,
+      }),
+    ).toBe(true);
+    expect(loadSettings(storage)).toEqual({
+      profileId: 'dymo-99014',
+      customsForms: 'separateA4',
+      autoProfile: false,
+    });
     expect(
       Object.keys(JSON.parse(storage.data.get(SETTINGS_KEY) ?? '{}') as object).sort(),
-    ).toEqual(['customsForms', 'profileId']);
+    ).toEqual(['autoProfile', 'customsForms', 'profileId']);
+  });
+
+  it('treats settings stored before the auto-format option as auto-format on', () => {
+    expect(parseSettings('{"profileId":"dymo-99014","customsForms":"omit"}')).toEqual({
+      profileId: 'dymo-99014',
+      customsForms: 'omit',
+      autoProfile: true,
+    });
+    expect(
+      parseSettings('{"profileId":"dymo-99014","customsForms":"omit","autoProfile":"yes"}'),
+    ).toBeNull();
   });
 
   it('forgets everything on request', () => {
     const storage = memoryStorage();
-    saveSettings(storage, { profileId: 'brother-62', customsForms: 'omit' });
+    saveSettings(storage, { profileId: 'brother-62', customsForms: 'omit', autoProfile: true });
     forgetSettings(storage);
     expect(storage.data.size).toBe(0);
     expect(loadSettings(storage)).toBeNull();
@@ -72,13 +91,19 @@ describe('remembered settings', () => {
 
   it('copes with storage blocked by the browser', () => {
     expect(loadSettings(blockedStorage)).toBeNull();
-    expect(saveSettings(blockedStorage, { profileId: 'dymo-99014', customsForms: 'omit' })).toBe(
-      false,
-    );
+    expect(
+      saveSettings(blockedStorage, {
+        profileId: 'dymo-99014',
+        customsForms: 'omit',
+        autoProfile: true,
+      }),
+    ).toBe(false);
     expect(() => {
       forgetSettings(blockedStorage);
     }).not.toThrow();
     expect(loadSettings(null)).toBeNull();
-    expect(saveSettings(null, { profileId: 'dymo-99014', customsForms: 'omit' })).toBe(false);
+    expect(
+      saveSettings(null, { profileId: 'dymo-99014', customsForms: 'omit', autoProfile: true }),
+    ).toBe(false);
   });
 });

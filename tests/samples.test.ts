@@ -13,7 +13,7 @@ import { center, containsPoint, height, intersect, ptToMm, width } from '../src/
 import { extractLines, lineLength } from '../src/core/lines.ts';
 import { getProfile } from '../src/profiles/index.ts';
 import { analyze, pdfjs, visibleBox } from './helpers.ts';
-import { DEFAULT_PROFILE, SAMPLES_DIR, loadSamples } from './samples.ts';
+import { defaultProfileFor, SAMPLES_DIR, loadSamples } from './samples.ts';
 
 const samples = SAMPLES_DIR ? await loadSamples(SAMPLES_DIR) : [];
 
@@ -41,7 +41,7 @@ describe.skipIf(!SAMPLES_DIR)('real samples ($PARCELSCHNITT_SAMPLES)', () => {
       const detections = detectLabels(source);
       const first = detections.find((d) => d.role === 'shippingLabel') ?? detections[0];
       if (!first) throw new Error('not detected');
-      const profile = getProfile(DEFAULT_PROFILE[first.layoutId] ?? 'label-103x199');
+      const profile = getProfile(defaultProfileFor(first.layoutId));
       const result = await cropLabels(sample.bytes, pdfjs, { profile });
       expect(result.pdf).not.toBeNull();
       if (!result.pdf) return;

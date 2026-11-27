@@ -12,6 +12,7 @@ export const dhlPaketmarke: CutLineLayout = {
   kind: 'cutLine',
   id: 'dhl-paketmarke',
   role: 'shippingLabel',
+  recommendedProfileId: 'label-103x199',
   carrier: 'DHL',
   markers: ['Leitcode', 'Identcode'],
   minCutLineRatio: 0.8,

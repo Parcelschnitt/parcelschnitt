@@ -15,7 +15,7 @@ import {
   type PdfJsLib,
 } from '../core/index.ts';
 import { normalizeQuarterTurn } from '../core/geometry.ts';
-import { getProfile } from '../profiles/index.ts';
+import { getProfile, type ProfileId } from '../profiles/index.ts';
 import { renderPreviews, type PdfJsRenderLib } from './preview.ts';
 import {
   isManualRequest,
@@ -72,6 +72,7 @@ async function toResponse(id: number, result: CropResult): Promise<ResultRespons
   return {
     type: 'result',
     id,
+    profileId: result.profile.id as ProfileId,
     labels: result.labels.map(summarize),
     pdf: result.pdf ? toTransferable(result.pdf) : null,
     a4Pdf: result.a4Pdf ? toTransferable(result.a4Pdf) : null,
@@ -85,6 +86,7 @@ async function processAuto(request: ProcessRequest): Promise<ResultResponse> {
     profile: getProfile(request.profileId),
     allowShrink: request.allowShrink,
     customsForms: request.customsForms,
+    autoProfile: request.autoProfile,
   });
   return toResponse(request.id, result);
 }
