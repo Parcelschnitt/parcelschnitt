@@ -1,0 +1,95 @@
+name: Deploy to GitHub Pages
+
+# Builds the static site from main and publishes it on GitHub Pages.
+#
+# Requirements (see CONTRIBUTING.md, "Deployment"):
+# - Settings → Pages → Source: "GitHub Actions"
+# - Repository variables PARCELSCHNITT_LEGAL_* with the imprint details. The build fails
+#   without them (PARCELSCHNITT_REQUIRE_LEGAL=1), so no page without a valid imprint goes live.
+# - GitHub Pages on private repositories needs a paid plan, so both jobs only run once the
+#   repository is public.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  # Never cancel a running deployment half-way.
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (lockfile only, no install scripts)
+        run: npm ci --ignore-scripts
+
+      - name: No PDFs outside tests/fixtures
+        run: npm run check:pdfs
+
+      - name: Tests
+        run: npm test
+
+      - name: Build with imprint details
+        # Values are passed as environment variables, never interpolated into the script.
+        env:
+          PARCELSCHNITT_REQUIRE_LEGAL: '1'
+          PARCELSCHNITT_LEGAL_NAME: ${{ vars.PARCELSCHNITT_LEGAL_NAME }}
+          PARCELSCHNITT_LEGAL_STREET: ${{ vars.PARCELSCHNITT_LEGAL_STREET }}
+          PARCELSCHNITT_LEGAL_POSTAL_CODE: ${{ vars.PARCELSCHNITT_LEGAL_POSTAL_CODE }}
+          PARCELSCHNITT_LEGAL_CITY: ${{ vars.PARCELSCHNITT_LEGAL_CITY }}
+          PARCELSCHNITT_LEGAL_COUNTRY: ${{ vars.PARCELSCHNITT_LEGAL_COUNTRY }}
+          PARCELSCHNITT_LEGAL_EMAIL: ${{ vars.PARCELSCHNITT_LEGAL_EMAIL }}
+        run: npm run build
+
+      - name: Built pages carry the strict CSP and complete legal details
+        run: |
+          for page in dist/*.html; do
+            grep -Fq "connect-src &#39;none&#39;" "$page" || { echo "CSP missing in $page"; exit 1; }
+            if grep -Eq '<script>|<style>| on[a-z]+="' "$page"; then
+              echo "Inline script, style or event handler found in $page"; exit 1
+            fi
+            if grep -Eq '\{\{legal\.|\[Vor- und Nachname\]|kontakt@example\.org' "$page"; then
+              echo "Legal placeholder left in $page"; exit 1
+            fi
+          done
+
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: dist
+
+  deploy:
+    name: Publish
+    needs: build
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # The only job with write access, limited to what Pages deployment requires.
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

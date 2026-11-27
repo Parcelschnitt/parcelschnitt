@@ -38,6 +38,21 @@ details are filled in at build time from `PARCELSCHNITT_LEGAL_*` environment var
 a local `legal.local.json` (git-ignored; see `legal.example.json`). Never commit real details.
 Deployment builds set `PARCELSCHNITT_REQUIRE_LEGAL=1` and fail without complete details.
 
+## Deployment (maintainers)
+
+`.github/workflows/deploy.yml` builds `main` and publishes it on GitHub Pages. It only runs
+once the repository is public. One-time setup:
+
+1. Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+2. Settings → Secrets and variables → Actions → **Variables** → add the repository variables
+   `PARCELSCHNITT_LEGAL_NAME`, `PARCELSCHNITT_LEGAL_STREET`, `PARCELSCHNITT_LEGAL_POSTAL_CODE`,
+   `PARCELSCHNITT_LEGAL_CITY`, `PARCELSCHNITT_LEGAL_COUNTRY`, `PARCELSCHNITT_LEGAL_EMAIL`.
+   Variables (not secrets) are fine: the values are published on the imprint page anyway.
+3. Push to `main` or run the workflow manually (Actions → Deploy to GitHub Pages → Run).
+
+The build fails if any variable is missing, and the deployed pages are checked for the CSP and
+for leftover placeholders.
+
 ## Reporting a new label layout
 
 Open an issue describing the layout (carrier, where it comes from, page size, marker texts,
