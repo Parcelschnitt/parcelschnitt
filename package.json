@@ -1,0 +1,43 @@
+{
+  "name": "parcelschnitt",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Crops A4 shipping-label PDFs to label-printer size, entirely in the browser.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "fixtures": "node scripts/generate-fixtures.ts",
+    "check:pdfs": "node scripts/check-pdfs.ts --all",
+    "crop-samples": "node scripts/crop-samples.ts",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "node scripts/check-pdfs.ts --staged"
+  },
+  "dependencies": {
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "6.5.438"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.6.11",
+    "eslint": "10.15.0",
+    "eslint-config-prettier": "10.1.9",
+    "globals": "17.14.0",
+    "prettier": "3.10.1",
+    "simple-git-hooks": "2.14.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.74.0",
+    "vite": "8.4.0",
+    "vitest": "5.1.2"
+  }
+}
