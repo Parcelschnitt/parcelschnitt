@@ -30,8 +30,10 @@ export function lineRect(line: Line): Rect {
 
 /** Max deviation from perfectly axis-aligned, in pt. */
 const AXIS_TOLERANCE = 0.75;
-/** Filled shapes thinner than this count as lines. */
+/** Filled shapes thinner than this count as lines... */
 const MAX_LINE_THICKNESS = 2;
+/** ...if they are clearly elongated (tiny squares, e.g. 2D-code modules, are not lines). */
+const MIN_LINE_ELONGATION = 3;
 /** Max gap between dash pieces that still belong to one line. */
 const MAX_DASH_GAP = 4;
 
@@ -43,7 +45,7 @@ function rawLines(elements: readonly PageElement[]): Line[] {
     const w = bbox.x1 - bbox.x0;
     const h = bbox.y1 - bbox.y0;
     if (element.filled && !element.stroked) {
-      if (h <= MAX_LINE_THICKNESS && w > h) {
+      if (h <= MAX_LINE_THICKNESS && w >= MIN_LINE_ELONGATION * h) {
         lines.push({
           orientation: 'horizontal',
           position: (bbox.y0 + bbox.y1) / 2,
@@ -51,7 +53,7 @@ function rawLines(elements: readonly PageElement[]): Line[] {
           to: bbox.x1,
           sources: [index],
         });
-      } else if (w <= MAX_LINE_THICKNESS && h > w) {
+      } else if (w <= MAX_LINE_THICKNESS && h >= MIN_LINE_ELONGATION * w) {
         lines.push({
           orientation: 'vertical',
           position: (bbox.x0 + bbox.x1) / 2,

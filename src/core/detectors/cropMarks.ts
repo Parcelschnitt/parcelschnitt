@@ -16,8 +16,11 @@ import type { PageAnalysis, PageElement } from '../types.ts';
 
 /** How far apart two cross centres may be and still count as the same corner. */
 const CORNER_TOLERANCE = 2.5;
-/** Arms must actually cross: tolerance for the intersection test. */
-const CROSSING_TOLERANCE = 1;
+/**
+ * Arms must cross in their inner part: the crossing point must keep this share of the arm
+ * length to both ends. Corners of rectangles (L shapes) and T-junctions are not crosses.
+ */
+const MIN_ARM_OVERHANG = 0.2;
 /** Clearance around a cross inside which content counts as part of the cross. */
 const CROSS_CLEARANCE = 1;
 
@@ -26,6 +29,15 @@ interface Cross {
   y: number;
   box: Rect;
   sources: readonly number[];
+}
+
+/** True when a horizontal and a vertical line cross each other in their inner parts. */
+export function isCross(horizontal: Line, vertical: Line): boolean {
+  const inner = (line: Line, at: number): boolean => {
+    const overhang = MIN_ARM_OVERHANG * lineLength(line);
+    return at >= line.from + overhang && at <= line.to - overhang;
+  };
+  return inner(horizontal, vertical.position) && inner(vertical, horizontal.position);
 }
 
 function findCrosses(lines: readonly Line[], layout: CropMarkLayout): Cross[] {
@@ -37,12 +49,7 @@ function findCrosses(lines: readonly Line[], layout: CropMarkLayout): Cross[] {
   const crosses: Cross[] = [];
   for (const h of horizontal) {
     for (const v of vertical) {
-      const crossing =
-        v.position >= h.from - CROSSING_TOLERANCE &&
-        v.position <= h.to + CROSSING_TOLERANCE &&
-        h.position >= v.from - CROSSING_TOLERANCE &&
-        h.position <= v.to + CROSSING_TOLERANCE;
-      if (!crossing) continue;
+      if (!isCross(h, v)) continue;
       const duplicate = crosses.some(
         (c) =>
           Math.abs(c.x - v.position) <= CORNER_TOLERANCE &&
