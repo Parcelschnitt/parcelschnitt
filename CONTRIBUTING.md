@@ -55,9 +55,10 @@ for leftover placeholders.
 
 ## Reporting a new label layout
 
-Open an issue describing the layout (carrier, where it comes from, page size, marker texts,
-cut lines or crop marks). **Do not attach the real PDF.** A screenshot with all personal data
-blacked out is fine.
+Use the issue form "Neues Etikett melden / Report a new label layout". It asks for the carrier,
+the source of the PDF, sizes and a description of the page layout. **Do not attach the real
+PDF.** A screenshot is fine only with all personal data, barcodes and codes blacked out.
+Vulnerabilities go through private vulnerability reporting (see SECURITY.md), never an issue.
 
 ---
 
@@ -69,4 +70,4 @@ blacked out is fine.
 - Erkennung nur anhand des Inhalts; jedes neue Layout braucht Fixture und Test.
 - Nie Etiketteninhalte loggen.
 - Branch, Pull Request, grüne CI; Commits nach Conventional Commits auf Englisch.
-- Neues Layout melden: Issue mit Beschreibung, **kein echtes PDF anhängen**.
+- Neues Layout melden: Issue-Formular „Neues Etikett melden“, **kein echtes PDF anhängen**.
