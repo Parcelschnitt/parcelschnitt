@@ -44,6 +44,17 @@ jobs:
       - name: Tests
         run: npm test
 
+      - name: Build
+        run: npm run build
+
+      - name: Built page carries the strict CSP (no network, no inline code)
+        run: |
+          grep -Fq "connect-src &#39;none&#39;" dist/index.html
+          grep -Fq "script-src &#39;self&#39;;" dist/index.html
+          if grep -Eq '<script>|<style>| on[a-z]+="' dist/index.html; then
+            echo "Inline script, style or event handler found in dist/index.html"; exit 1
+          fi
+
       - name: Fixtures are exactly what the generator produces
         run: |
           npm run fixtures

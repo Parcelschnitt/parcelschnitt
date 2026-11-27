@@ -29,7 +29,8 @@ Uploads, kein Konto und kein Tracking. Deine Etiketten verlassen deinen Rechner 
 
 ### Stand
 
-Das Grundgerüst (Erkennung und Zuschnitt, Tests) steht. Eine Oberfläche gibt es noch nicht.
+Erkennung, Zuschnitt und eine erste Weboberfläche stehen. Manueller Zuschnitt und die
+Veröffentlichung als Website folgen.
 
 ### Entwicklung
 
@@ -37,9 +38,11 @@ Voraussetzung: Node.js 24.
 
 ```sh
 npm install
+npm run dev        # local dev server / lokaler Entwicklungsserver
 npm test
 npm run lint
 npm run typecheck
+npm run build      # static site in dist/ / statische Seite in dist/
 ```
 
 Mitarbeit: siehe [CONTRIBUTING.md](CONTRIBUTING.md). Sicherheitslücken bitte vertraulich
@@ -72,7 +75,8 @@ tracking. Your labels never leave your computer.
 
 ### Status
 
-The foundation (detection, cropping, tests) is in place. There is no user interface yet.
+Detection, cropping and a first web interface are in place. Manual cropping and publishing
+the website will follow.
 
 ### Development
 
@@ -80,9 +84,11 @@ Requires Node.js 24.
 
 ```sh
 npm install
+npm run dev        # local dev server / lokaler Entwicklungsserver
 npm test
 npm run lint
 npm run typecheck
+npm run build      # static site in dist/ / statische Seite in dist/
 ```
 
 Contributing: see [CONTRIBUTING.md](CONTRIBUTING.md). Please report vulnerabilities
