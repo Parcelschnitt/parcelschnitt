@@ -1,0 +1,292 @@
+/* Parcelschnitt UI. System fonts only: no external resources. */
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1b1f24;
+  --muted: #5b6573;
+  --border: #d7dce3;
+  --accent: #b8001f;
+  --accent-text: #ffffff;
+  --focus: #0b5fff;
+  --ok: #1d6b35;
+  --warn-bg: #fff4d6;
+  --warn-text: #6b4b00;
+  --error-bg: #fde8ea;
+  --error-text: #8a0f1f;
+  --radius: 10px;
+  color-scheme: light dark;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151a;
+    --surface: #1b1f26;
+    --text: #e8ebef;
+    --muted: #a3acb8;
+    --border: #343b46;
+    --accent: #ff4d63;
+    --accent-text: #12151a;
+    --focus: #6ea0ff;
+    --ok: #6fd18c;
+    --warn-bg: #3a2f10;
+    --warn-text: #ffd977;
+    --error-bg: #3d1419;
+    --error-text: #ffb3bd;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 54rem;
+  padding: 1.5rem 1rem 3rem;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.15rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+.site-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+}
+
+.wip {
+  margin: 1rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius);
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-size: 0.9rem;
+}
+
+.card {
+  margin: 1rem 0;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.drop-zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 2rem 1rem;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  text-align: center;
+  cursor: pointer;
+}
+
+.drop-zone:hover,
+.drop-zone.dragging {
+  border-color: var(--accent);
+}
+
+.drop-zone:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* The file input stays focusable and accessible but invisible; the label is the target. */
+.drop-zone input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.drop-title {
+  font-weight: 600;
+}
+
+.drop-hint,
+.file-name,
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.field.checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
+select {
+  max-width: 24rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.caution {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-size: 0.9rem;
+}
+
+.status:empty {
+  display: none;
+}
+
+.status.error {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+
+.label-list {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.label-list li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.label-list .name {
+  font-weight: 600;
+}
+
+.label-list .ok {
+  color: var(--ok);
+}
+
+.label-list .warn {
+  color: var(--warn-text);
+}
+
+.output {
+  margin-top: 1rem;
+}
+
+.previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.previews canvas {
+  max-width: min(100%, 18rem);
+  height: auto;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button,
+.link-button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.link-button {
+  padding: 0.25rem 0.5rem;
+  border: none;
+  background: none;
+  color: var(--text);
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.site-footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[hidden] {
+  display: none !important;
+}
